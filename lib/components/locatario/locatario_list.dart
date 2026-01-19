@@ -51,10 +51,10 @@ class _LocatarioListState extends State<LocatarioList> {
                 headingRowColor: WidgetStateProperty.all(Colors.grey[200]),
                 columns: const[
                   DataColumn(label: Text('')),
-                  DataColumn(label: Text('Nome')),
-                  DataColumn(label: Text('Idade')),
-                  DataColumn(label: Text('CPF')),
-                  DataColumn(label: Text('Ultimo Endereço'))
+                  DataColumn(label: Text('Codigo')),
+                  DataColumn(label: Text('Cod. Pessoa')),
+                  DataColumn(label: Text('Tem Pet')),
+                  DataColumn(label: Text('qtd Dependentes'))
                 ],
                 rows: state.locatarios.map((loc) {
                   return DataRow(
@@ -72,15 +72,15 @@ class _LocatarioListState extends State<LocatarioList> {
                           ),
                           DatagridDeleteButton(
                               onPressed: () {
-                                widget.store.deleteLocatario(loc.cpf);
+                                widget.store.deleteLocatario(loc.codLocatario);
                             },
                           )
                         ],
                       )),
-                      DataCell(Text(loc.nomeLocatario)),
-                      DataCell(Text(loc.idade.toString())),
-                      DataCell(Text(loc.cpf)),
-                      DataCell(Text(loc.enderecoUltimoImovel)),
+                      DataCell(Text(loc.codLocatario.toString())),
+                      DataCell(Text(loc.codPessoa.toString())),
+                      DataCell(Text(loc.temPet.toString())),
+                      DataCell(Text(loc.qtdDependentes.toString())),
                     ]
                   );
                 }).toList(),

@@ -20,8 +20,8 @@ class LocatarioStore extends ValueNotifier<LocatarioState> {
     );
   }
 
-  Future<void> deleteLocatario(String cpf) async {
-    await repository.deleteLocatario(cpf);
+  Future<void> deleteLocatario(int codLocatario) async {
+    await repository.deleteLocatario(codLocatario);
     getLocatarios();
   }
 

@@ -13,4 +13,7 @@ class Helper {
   
   static DateTime parseDateTime(String data, {String formato = 'dd/MM/yyyy'}) =>
     DateFormat(formato, 'pt_BR').parse(data);
+
+  static T getValueEnum<T>(List<T> values, int numero) =>
+    values[numero];
 }

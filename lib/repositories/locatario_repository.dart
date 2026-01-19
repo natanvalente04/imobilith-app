@@ -29,8 +29,8 @@ class LocatarioRepository {
       return repositoryHelper.parseT<Locatario>(jsonRaw, Locatario.fromJson);
   }
 
-  Future deleteLocatario(String cpf) async{
-    await client.delete(Uri.parse(uriLocatario + cpf));
+  Future deleteLocatario(int codLocatario) async{
+    await client.delete(Uri.parse(uriLocatario + codLocatario.toString()));
   }
 
   Future updateLocatario(Locatario locatarioAtualizado) async {

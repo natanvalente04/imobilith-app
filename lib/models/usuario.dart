@@ -9,7 +9,6 @@ enum Role {
 class Usuario extends Equatable implements JsonSerializable {
   final int codUsuario;
   final int codPessoa;
-  final String email;
   final Role role;
   final String senha;
   final bool ativo;
@@ -17,7 +16,6 @@ class Usuario extends Equatable implements JsonSerializable {
   Usuario({
     required this.codUsuario,
     required this.codPessoa,
-    required this.email,
     required this.role,
     required this.senha,
     required this.ativo,
@@ -27,7 +25,6 @@ class Usuario extends Equatable implements JsonSerializable {
     return Usuario(
       codUsuario: 0,
       codPessoa: 0,
-      email: "",
       role: Role.Admin,
       senha: "",
       ativo: true,
@@ -38,7 +35,6 @@ class Usuario extends Equatable implements JsonSerializable {
   List<Object?> get props => [
     codUsuario,
     codPessoa,
-    email,
     role,
     senha,
     ativo
@@ -48,7 +44,6 @@ class Usuario extends Equatable implements JsonSerializable {
     return {
       'codUsuario': codUsuario,
       'codPessoa': codPessoa,
-      'email': email,
       'role': role,
       'senha': senha,
       'ativo': ativo,
@@ -59,7 +54,6 @@ class Usuario extends Equatable implements JsonSerializable {
     return Usuario(
       codUsuario: json['codUsuario'],
       codPessoa: json['codPessoa'], 
-      email: json['email'], 
       role: json['role'], 
       senha: json['senha'], 
       ativo: json['ativo']
