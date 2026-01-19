@@ -54,10 +54,26 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(
-              controller: nomeController,
-              decoration: InputDecoration(labelText: "Nome*"),
-              keyboardType: TextInputType.text,
+            Row(
+              children: [
+                SizedBox(
+                      width: 60,
+                      child: TextField(
+                        controller: codPessoaController,
+                        decoration: InputDecoration(labelText: "Codigo"),
+                        keyboardType: TextInputType.number,
+                        enabled: false,
+                      ),
+                    ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    controller: nomeController,
+                    decoration: InputDecoration(labelText: "Nome*"),
+                    keyboardType: TextInputType.text,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             Row(
@@ -66,7 +82,6 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
                   child: TextField(
                     controller: cpfController,
                     decoration: InputDecoration(labelText: "CPF*"),
-                    enabled: !existe,
                     keyboardType: TextInputType.number,
                     inputFormatters: [
                       cpfMask
@@ -76,53 +91,74 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: TextField(
-                    controller: dataNascimentoController,
-                    decoration: InputDecoration(labelText: "Data Nascimento*"),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  )
-                )
-              ],
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: enderecoController,
-              decoration: InputDecoration(labelText: "Ultimo Endereço*"),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
                     controller: rgController,
-                    decoration: InputDecoration(labelText: "RG*"),
+                    decoration: InputDecoration(labelText: "RG"),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly
                     ],
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: enderecoController,
+              decoration: InputDecoration(labelText: "Ultimo Endereço*"),
+              keyboardType: TextInputType.text
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: telefoneController,
+                    decoration: InputDecoration(labelText: "Telefone/Celular"),
+                    keyboardType: TextInputType.text                
+                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: DropdownButtonFormField<int>(
-                    value: selecionado,
-                    decoration: const InputDecoration(
-                      labelText: "Possui pet?",
-                      border: OutlineInputBorder(),
-                    ),
-                    items: const [
-                      DropdownMenuItem(value: 1, child: Text("Sim")),
-                      DropdownMenuItem(value: 0, child: Text("Não"))
-                    ],
-                    onChanged: (value){
-                      setState((){
-                        selecionado = value;
-                      });
-                    }
+                  child: TextField(
+                    controller: estadoCivilController,
+                    decoration: InputDecoration(labelText: "Estado Civil*"),
+                    keyboardType: TextInputType.text
                   ),
-                )
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: dataNascimentoController,
+                    readOnly: true,
+                    decoration: const InputDecoration(
+                      labelText: "Data Nascimento*",
+                    ),
+                    onTap: () async {
+                      final DateTime? selecionado = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime(DateTime.now().year - 150),
+                        lastDate: DateTime(DateTime.now().year + 1),
+                      );
+                      if (selecionado != null) {
+                        setState(() {
+                          dataNascimentoController.text = Helper.formatDateTime(selecionado, formato: 'DD/MM/yyyy');
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(labelText: "E-mail*"),
+                    keyboardType: TextInputType.text
+                  ),
+                ),
               ],
             ),
           ],
