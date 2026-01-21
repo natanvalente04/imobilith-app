@@ -8,6 +8,23 @@ enum EstadoCivil{
   viuvo,
 }
 
+extension EstadoCivilExt on EstadoCivil {
+  String get label {
+    switch (this) {
+      case EstadoCivil.solteiro:
+        return 'Solteiro';
+      case EstadoCivil.casado:
+        return 'Casado';
+      case EstadoCivil.divorciado:
+        return 'Divorciado';
+      case EstadoCivil.viuvo:
+        return 'Viuvo';
+      default:
+        return '';
+    }
+  }
+}
+
 class Pessoa extends Equatable implements JsonSerializable {
   final int codPessoa;
   final String nomePessoa;
@@ -67,8 +84,8 @@ class Pessoa extends Equatable implements JsonSerializable {
       'endereco': endereco,
       'telefone': telefone,
       'email': email,
-      'estadoCivil': estadoCivil,
-      'dataNascimento': dataNascimento,
+      'estadoCivil': estadoCivil.index,
+      'dataNascimento': dataNascimento.toIso8601String(),
     };
   }
   

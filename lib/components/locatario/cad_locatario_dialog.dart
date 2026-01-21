@@ -1,4 +1,4 @@
-import 'package:alugueis_app/components/dialog_title.dart';
+import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/models/locatario.dart';
 import 'package:alugueis_app/store/locatario_store.dart';
 import 'package:flutter/material.dart';

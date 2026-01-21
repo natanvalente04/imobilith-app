@@ -1,7 +1,7 @@
 // ignore_for_file: annotate_overrides, avoid_print
 
-import 'package:alugueis_app/components/datagrid_delete_button.dart';
-import 'package:alugueis_app/components/datagrid_edit_button.dart';
+import 'package:alugueis_app/components/datagrid/datagrid_delete_button.dart';
+import 'package:alugueis_app/components/datagrid/datagrid_edit_button.dart';
 import 'package:alugueis_app/components/locatario/cad_locatario_dialog.dart';
 import 'package:alugueis_app/store/locatario_store.dart';
 import 'package:flutter/material.dart';

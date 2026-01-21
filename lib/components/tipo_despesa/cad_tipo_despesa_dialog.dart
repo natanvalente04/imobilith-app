@@ -1,4 +1,4 @@
-import 'package:alugueis_app/components/dialog_title.dart';
+import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/models/tipo_despesa.dart';
 import 'package:alugueis_app/store/tipo_despesa_store.dart';
 import 'package:flutter/material.dart';

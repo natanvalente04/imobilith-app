@@ -1,4 +1,8 @@
-import 'package:alugueis_app/components/dialog_title.dart';
+import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfield_cpf.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
+import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/helper.dart';
 import 'package:alugueis_app/models/pessoa.dart';
 import 'package:alugueis_app/store/locatario_store.dart';
@@ -25,15 +29,12 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
     final enderecoController = TextEditingController();
     final telefoneController = TextEditingController();
     final emailController = TextEditingController();
-    final estadoCivilController = TextEditingController();
     final rgController = TextEditingController();
 
+    EstadoCivil? estadoCivilSelecionado;
     int? selecionado;
     bool existe = false;
-    final cpfMask = MaskTextInputFormatter(
-        mask: '###.###.###-##',
-        filter: { "#": RegExp(r'[0-9]') },
-      );
+
     @override
     void initState() {
       super.initState();
@@ -58,20 +59,11 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
               children: [
                 SizedBox(
                       width: 60,
-                      child: TextField(
-                        controller: codPessoaController,
-                        decoration: InputDecoration(labelText: "Codigo"),
-                        keyboardType: TextInputType.number,
-                        enabled: false,
-                      ),
+                      child: DialogTextfieldNumeric(controller: codPessoaController, labelText: "Codigo", enabled: false),
                     ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: TextField(
-                    controller: nomeController,
-                    decoration: InputDecoration(labelText: "Nome*"),
-                    keyboardType: TextInputType.text,
-                  ),
+                  child: DialogTextfield(controller: nomeController, labelText: "Nome*"),
                 ),
               ],
             ),
@@ -79,50 +71,41 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: cpfController,
-                    decoration: InputDecoration(labelText: "CPF*"),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      cpfMask
-                    ],                  
-                  ),
-                ),
+                  child: DialogTextfieldCpf(controller: cpfController),
+                ),                
                 const SizedBox(width: 16),
                 Expanded(
-                  child: TextField(
-                    controller: rgController,
-                    decoration: InputDecoration(labelText: "RG"),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  ),
+                  child: DialogTextfieldNumeric(controller: rgController, labelText: "RG")
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            TextField(
-              controller: enderecoController,
-              decoration: InputDecoration(labelText: "Ultimo Endereço*"),
-              keyboardType: TextInputType.text
-            ),
+            DialogTextfield(controller: enderecoController, labelText: "Ultimo Endereço*"),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: telefoneController,
-                    decoration: InputDecoration(labelText: "Telefone/Celular"),
-                    keyboardType: TextInputType.text                
-                  ),
+                  child: DialogTextfield(controller: telefoneController, labelText: "Telefone/Celular"),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: TextField(
-                    controller: estadoCivilController,
-                    decoration: InputDecoration(labelText: "Estado Civil*"),
-                    keyboardType: TextInputType.text
+                  child: DialogDropdown(
+                    store: ValueNotifier(EstadoCivil.values),
+                    value: estadoCivilSelecionado?.index,
+                    onChanged: (value){
+                      setState(() {
+                        estadoCivilSelecionado = Helper.getValueEnum(EstadoCivil.values, value!);
+                      });
+                    },
+                    label: "Estado Civil*",
+                    itemsBuilder: (values){
+                      return values.map<DropdownMenuItem<int>>((ec) {
+                        return DropdownMenuItem(
+                          value: ec.index,
+                          child: Text(ec.label),
+                        );
+                      }).toList();
+                    },
                   ),
                 ),
               ],
@@ -145,7 +128,7 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
                       );
                       if (selecionado != null) {
                         setState(() {
-                          dataNascimentoController.text = Helper.formatDateTime(selecionado, formato: 'DD/MM/yyyy');
+                          dataNascimentoController.text = Helper.formatDate(selecionado);
                         });
                       }
                     },
@@ -153,11 +136,7 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(labelText: "E-mail*"),
-                    keyboardType: TextInputType.text
-                  ),
+                  child: DialogTextfield(controller: emailController, labelText: "E-mail*"),
                 ),
               ],
             ),
@@ -179,7 +158,7 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
               endereco: enderecoController.text,
               telefone: telefoneController.text,
               email: emailController.text,
-              estadoCivil: Helper.getValueEnum(EstadoCivil.values, int.tryParse(estadoCivilController.text) ?? 0),
+              estadoCivil: Helper.getValueEnum(EstadoCivil.values, estadoCivilSelecionado!.index),
               dataNascimento: Helper.parseDateTime(dataNascimentoController.text),
 
             );

@@ -1,6 +1,6 @@
 
-import 'package:alugueis_app/components/datagrid_delete_button.dart';
-import 'package:alugueis_app/components/datagrid_edit_button.dart';
+import 'package:alugueis_app/components/datagrid/datagrid_delete_button.dart';
+import 'package:alugueis_app/components/datagrid/datagrid_edit_button.dart';
 import 'package:alugueis_app/components/tipo_despesa/cad_tipo_despesa_dialog.dart';
 import 'package:alugueis_app/store/tipo_despesa_store.dart';
 import 'package:flutter/material.dart';

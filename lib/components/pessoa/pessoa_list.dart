@@ -1,5 +1,5 @@
-import 'package:alugueis_app/components/datagrid_delete_button.dart';
-import 'package:alugueis_app/components/datagrid_edit_button.dart';
+import 'package:alugueis_app/components/datagrid/datagrid_delete_button.dart';
+import 'package:alugueis_app/components/datagrid/datagrid_edit_button.dart';
 import 'package:alugueis_app/components/pessoa/cad_pessoa_dialog.dart';
 import 'package:alugueis_app/store/pessoa_store.dart';
 import 'package:flutter/material.dart';

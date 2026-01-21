@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class Helper {
 
@@ -16,4 +17,9 @@ class Helper {
 
   static T getValueEnum<T>(List<T> values, int numero) =>
     values[numero];
+
+  static MaskTextInputFormatter cpfMask = MaskTextInputFormatter(
+        mask: '###.###.###-##',
+        filter: { "#": RegExp(r'[0-9]') },
+      );
 }

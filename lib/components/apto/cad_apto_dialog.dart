@@ -1,5 +1,8 @@
-import 'package:alugueis_app/components/dialog_title.dart';
+import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
+import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/models/apto.dart';
+import 'package:alugueis_app/models/predio.dart';
 import 'package:alugueis_app/states/predio_state.dart';
 import 'package:alugueis_app/store/apto_store.dart';
 import 'package:alugueis_app/store/predio_store.dart';
@@ -54,43 +57,30 @@ class _CadAptoDialogState extends State<CadAptoDialog> {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: codAptoController,
-                    decoration: InputDecoration(labelText: "codApto*"),
-                    enabled: !existe,
-                  ),
+                  child: DialogTextfieldNumeric(controller: codAptoController, labelText: "codApto*", enabled: !existe),
                 ),
                 const SizedBox(width: 16,),
                 Expanded(
-                  child: TextField(
-                    controller: andarController,
-                    decoration: InputDecoration(labelText: "andar*"),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  ),
+                  child: DialogTextfieldNumeric(controller: andarController,labelText: "andar*"),
                 ),
                 const SizedBox(width: 16,),
                 Expanded(
-                  child: ValueListenableBuilder(
-                    valueListenable: widget.predioStore,
-                    builder: (context, state, _) {
-                      return DropdownButtonFormField<int>(
-                        value: predioSelecionado,
-                        items: state.predios.map((p) {
+                  child: DialogDropdown(
+                    store: widget.predioStore,
+                    value: predioSelecionado,
+                    onChanged: (value){
+                      setState(() {
+                        predioSelecionado = value;
+                      });
+                    },
+                    label: "Predio*",
+                    itemsBuilder:(State) {
+                      return State.predios.map((p) {
                           return DropdownMenuItem(
                             value: p.codPredio,
                             child: Text(p.codPredio.toString() + " - " + p.nomePredio),
                           ); 
-                        }).toList(),
-                        onChanged: (value){
-                          setState(() {
-                            predioSelecionado = value;
-                          });
-                        },
-                        decoration: InputDecoration(labelText: "Predio*"),
-                      );
+                        }).toList();
                     }
                   ) 
                 )
@@ -100,36 +90,15 @@ class _CadAptoDialogState extends State<CadAptoDialog> {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: qtdBanheirosController,
-                    decoration: InputDecoration(labelText: "Quantidade Banheiros*"),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  )
+                  child: DialogTextfieldNumeric(controller: qtdBanheirosController,labelText: "Quantidade Banheiros*")
                 ),
                 const SizedBox(width: 16,),
                 Expanded(
-                  child: TextField(
-                    controller: qtdQuartosController,
-                    decoration: InputDecoration(labelText: "Quantidade Quartos"),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  )
+                  child: DialogTextfieldNumeric(controller: qtdQuartosController,labelText: "Quantidade Quartos")
                 ),
                 const SizedBox(width: 16,),
                 Expanded(
-                  child: TextField(
-                    controller: metrosQuadradosController,
-                    decoration: InputDecoration(labelText: "Metros Quadrados"),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  )
+                  child: DialogTextfieldNumeric(controller: metrosQuadradosController,labelText: "Metros Quadrados")
                 )
               ],
             )

@@ -1,4 +1,4 @@
-import 'package:alugueis_app/components/dialog_title.dart';
+import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/models/predio.dart';
 import 'package:alugueis_app/store/predio_store.dart';
 import 'package:flutter/material.dart';

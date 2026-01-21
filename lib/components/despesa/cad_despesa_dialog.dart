@@ -1,4 +1,5 @@
-import 'package:alugueis_app/components/dialog_title.dart';
+import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
+import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/helper.dart';
 import 'package:alugueis_app/models/despesa.dart';
 import 'package:alugueis_app/store/apto_store.dart';
@@ -120,25 +121,22 @@ class _CadDespesaDialogState extends State<CadDespesaDialog> {
                 Row(
                   children: [
                     Expanded(
-                      child: ValueListenableBuilder(
-                        valueListenable: widget.aptoStore,
-                        builder: (context, state, _) {
-                          return DropdownButtonFormField<int>(
-                            value: aptoSelecionado,
-                            items: state.aptos.map((a) {
-                              return DropdownMenuItem(
-                                value: a.codApto,
-                                child: Text("Apto ${a.codApto}"),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                aptoSelecionado = value;
-                              });
-                            },
-                            decoration:
-                                const InputDecoration(labelText: "Apartamento"),
-                          );
+                      child: DialogDropdown(
+                        store: widget.aptoStore,
+                        value: aptoSelecionado,
+                        onChanged: (value) {
+                          setState(() {
+                            aptoSelecionado = value;
+                          });
+                        },
+                        label: "Apartamento",
+                        itemsBuilder: (state) {
+                          return state.aptos.map<DropdownMenuItem<int>>((a) {
+                            return DropdownMenuItem(
+                              value: a.codApto,
+                              child: Text('Apto ${a.codApto}'),
+                            );
+                          }).toList();
                         },
                       ),
                     ),
