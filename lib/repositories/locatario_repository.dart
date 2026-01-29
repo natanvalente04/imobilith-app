@@ -2,6 +2,7 @@
 
 import 'package:alugueis_app/models/locatario.dart';
 import 'package:alugueis_app/repositories/helper/repository_helper.dart';
+import 'package:alugueis_app/repositories/helper/token_storage.dart';
 import 'package:http/http.dart';
 
 class LocatarioRepository {
@@ -11,17 +12,24 @@ class LocatarioRepository {
 
 
   Future<List<Locatario>> getLocatarios() async {
-    final response = await client.get(Uri.parse(uriLocatario));
+    final token = await TokenStorage.getToken();
+    final response = await client.get(Uri.parse(uriLocatario),
+      headers: {
+          'Authorization': 'Bearer $token'
+      },
+    );
     final jsonRaw = response.body;
     return repositoryHelper.parseListT<Locatario>(jsonRaw, Locatario.fromJson);
   }
 
   Future addLocatario(Locatario locatario) async {
     String json = repositoryHelper.parseToJson(locatario);
+    final token = await TokenStorage.getToken();
     final response = await client.post(
       Uri.parse(uriLocatario), 
       headers: {
       "Content-Type": "application/json; charset=UTF-8",
+      'Authorization': 'Bearer $token'
       },
       body: json
       );
@@ -30,15 +38,22 @@ class LocatarioRepository {
   }
 
   Future deleteLocatario(int codLocatario) async{
-    await client.delete(Uri.parse(uriLocatario + codLocatario.toString()));
+    final token = await TokenStorage.getToken();
+    await client.delete(Uri.parse(uriLocatario + codLocatario.toString()),
+      headers: {
+          'Authorization': 'Bearer $token'
+      },
+    );
   }
 
   Future updateLocatario(Locatario locatarioAtualizado) async {
     String json = repositoryHelper.parseToJson(locatarioAtualizado);
+    final token = await TokenStorage.getToken();
     final response = await client.put(
       Uri.parse(uriLocatario),
       headers: {
       "Content-Type": "application/json; charset=UTF-8",
+      'Authorization': 'Bearer $token'
       },
       body: json 
     );

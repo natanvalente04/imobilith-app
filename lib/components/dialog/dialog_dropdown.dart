@@ -7,6 +7,7 @@ class DialogDropdown<T> extends StatelessWidget {
   final int? value;
   final void Function(int?) onChanged;
   final String label;
+  final bool enabled;
 
   const DialogDropdown({
     super.key,
@@ -15,6 +16,7 @@ class DialogDropdown<T> extends StatelessWidget {
     required this.value,
     required this.onChanged,
     required this.label,
+    this.enabled=true,
   });
 
   @override
@@ -25,8 +27,8 @@ class DialogDropdown<T> extends StatelessWidget {
         return DropdownButtonFormField<int>(
           value: value,
           items: itemsBuilder(state),
-          onChanged: onChanged,
-          decoration: InputDecoration(labelText: label),
+          onChanged: enabled ? onChanged : null,
+          decoration: InputDecoration(labelText: label, enabled: enabled),
         );
       },
     );

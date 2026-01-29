@@ -1,6 +1,9 @@
 import 'package:alugueis_app/components/datagrid/datagrid_delete_button.dart';
 import 'package:alugueis_app/components/datagrid/datagrid_edit_button.dart';
+import 'package:alugueis_app/components/locatario/cad_locatario_dialog.dart';
 import 'package:alugueis_app/components/pessoa/cad_pessoa_dialog.dart';
+import 'package:alugueis_app/models/pessoa.dart';
+import 'package:alugueis_app/store/locatario_store.dart';
 import 'package:alugueis_app/store/pessoa_store.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +16,8 @@ class PessoaList extends StatefulWidget {
 }
 
 class _PessoaListState extends State<PessoaList> {
+  final LocatarioStore locatarioStore = LocatarioStore();
+  bool ehLocatario = false;
   void initState(){
     super.initState();
     widget.store.addListener(_listener);
@@ -56,6 +61,7 @@ class _PessoaListState extends State<PessoaList> {
                   DataColumn(label: Text('email')),
                   DataColumn(label: Text('estado civil')),
                   DataColumn(label: Text('idade')),
+                  DataColumn(label: Text('Locatário'))
                 ], 
                 rows: state.pessoas.map((p) {
                   return DataRow(
@@ -86,8 +92,21 @@ class _PessoaListState extends State<PessoaList> {
                       DataCell(Text(p.endereco.toString())),
                       DataCell(Text(p.telefone.toString())),
                       DataCell(Text(p.email.toString())),
-                      DataCell(Text(p.estadoCivil.toString())),
-                      DataCell(Text('teste')),
+                      DataCell(Text(p.estadoCivil.label)),
+                      DataCell(
+                        Checkbox(
+                          value: ehLocatario,
+                          onChanged: (value) {
+                            if(value!){
+                              showDialog(
+                                context: context, 
+                                builder: (_) => CadLocatarioDialog(store: locatarioStore, codPessoa: p.codPessoa,)
+                              );
+                            }
+                            setState(() => ehLocatario = value);
+                          },
+                        )
+                      ),
                     ]
                   );
                 }).toList(),

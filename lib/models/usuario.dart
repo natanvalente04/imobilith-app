@@ -2,9 +2,23 @@ import 'package:alugueis_app/repositories/helper/json_serializable.dart';
 import 'package:equatable/equatable.dart';
 
 enum Role {
-  Admin,
-  Locatario
+  admin,
+  locatario,
 }
+
+extension RoleExt on Role {
+  String get label {
+    switch (this) {
+      case Role.admin:
+        return 'Admin';
+      case Role.locatario:
+        return 'Locatario';
+      default:
+        return '';
+    }
+  }
+}
+
 
 class Usuario extends Equatable implements JsonSerializable {
   final int codUsuario;
@@ -25,7 +39,7 @@ class Usuario extends Equatable implements JsonSerializable {
     return Usuario(
       codUsuario: 0,
       codPessoa: 0,
-      role: Role.Admin,
+      role: Role.admin,
       senha: "",
       ativo: true,
     );
@@ -44,7 +58,7 @@ class Usuario extends Equatable implements JsonSerializable {
     return {
       'codUsuario': codUsuario,
       'codPessoa': codPessoa,
-      'role': role,
+      'role': role.index,
       'senha': senha,
       'ativo': ativo,
     };

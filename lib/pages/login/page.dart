@@ -21,7 +21,7 @@ class LoginPage extends StatelessWidget {
                   LoginHeader(),
                   const SizedBox(height: 50),
                   LoginMenu()
-                  ]
+                ]
               )
             )
           ] 

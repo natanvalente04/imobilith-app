@@ -1,18 +1,17 @@
-import 'dart:async';
 import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
 import 'package:alugueis_app/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class DialogTextfieldCpf extends DialogTextfield {
-  final MaskTextInputFormatter inputFormatter = Helper.cpfMask;
-  DialogTextfieldCpf({super.key, required super.controller, super.labelText = "CPF*"});
+class DialogTextfieldPhone extends DialogTextfield {
+  final MaskTextInputFormatter inputFormatter = Helper.phoneMask;
+  DialogTextfieldPhone({super.key, required super.controller, required super.labelText});
 
   @override
-  State<DialogTextfieldCpf> createState() => _DialogTextfieldCpfState();
+  State<DialogTextfieldPhone> createState() => _DialogTextfieldPhoneState();
 }
 
-class _DialogTextfieldCpfState extends State<DialogTextfieldCpf>{
+class _DialogTextfieldPhoneState extends State<DialogTextfieldPhone> {
   @override
   Widget build(BuildContext context) {
     return DialogTextfield(
@@ -21,5 +20,5 @@ class _DialogTextfieldCpfState extends State<DialogTextfieldCpf>{
       keyboardType: TextInputType.number,
       inputFormatters: [widget.inputFormatter],                  
     );
-  } 
+  }
 }

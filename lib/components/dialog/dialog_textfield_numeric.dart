@@ -7,13 +7,18 @@ class DialogTextfieldNumeric extends DialogTextfield {
   const DialogTextfieldNumeric({super.key, required super.controller,required super.labelText, super.enabled=true});
 
   @override
+  State<DialogTextfieldNumeric> createState() => _DialogTextfieldNumericState();
+}
+
+class _DialogTextfieldNumericState extends State<DialogTextfieldNumeric> {
+  @override
   Widget build(BuildContext context) {
     return DialogTextfield(
-      controller: controller, 
-      labelText: labelText,
+      controller: widget.controller, 
+      labelText: widget.labelText,
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      enabled: enabled,
+      enabled: widget.enabled,
     );
   }
 }

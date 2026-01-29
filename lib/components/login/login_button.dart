@@ -9,12 +9,13 @@ class LoginButton extends StatelessWidget {
   const LoginButton({super.key, 
     required this.text, 
     required this.onPressed, 
-    required this.outlined,
+    this.outlined = false,
     this.visible = true});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+        
         width: 200,
         height: 50,
         child: outlined == false ? 

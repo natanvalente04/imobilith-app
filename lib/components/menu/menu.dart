@@ -2,6 +2,7 @@
 
 import 'package:alugueis_app/pages/login/page.dart';
 import 'package:alugueis_app/components/menu/menu_items.dart';
+import 'package:alugueis_app/repositories/helper/token_storage.dart';
 import 'package:flutter/material.dart';
 
 class Menu extends StatefulWidget {
@@ -55,7 +56,8 @@ class _MenuState extends State<Menu> {
                       children: [ListTile(
                         title: Text('Logout', style: TextStyle(color: Colors.deepPurple),),
                         leading: Icon(Icons.logout, color: Colors.deepPurple),
-                        onTap: () {
+                        onTap: () async {
+                          await TokenStorage.clear();
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => LoginPage())

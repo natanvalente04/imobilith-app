@@ -1,6 +1,10 @@
 import 'package:alugueis_app/components/login/login_button.dart';
+import 'package:alugueis_app/components/login/login_registro_dialog.dart';
 import 'package:alugueis_app/components/menu/menu.dart';
+import 'package:alugueis_app/helper.dart';
+import 'package:alugueis_app/pages/login/card_login_page.dart';
 import 'package:alugueis_app/store/usuario_store.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoginMenu extends StatefulWidget {
@@ -20,7 +24,7 @@ class _LoginMenuState extends State<LoginMenu> {
 
   void _checkFirstAccess() async {
     final usuarioStore = UsuarioStore();
-    bool exists = await usuarioStore.ExisteUsuario();
+    bool exists = await usuarioStore.existeUsuario();
     setState(() {
       showRegister = !exists;
     });
@@ -34,7 +38,9 @@ class _LoginMenuState extends State<LoginMenu> {
         children: [
           if (showRegister) LoginButton(
             text: 'Cadastrar',
-            onPressed: () {},
+            onPressed: () {
+              showDialog(context: context, builder: (_) => LoginRegistroDialog(), barrierColor: const Color.fromARGB(0,0,0,0));
+            },
             outlined: true,
            ),
           if (showRegister) SizedBox(width: 20),
@@ -43,7 +49,7 @@ class _LoginMenuState extends State<LoginMenu> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Menu()),
+                MaterialPageRoute(builder: (context) => CardLoginPage()),
               );
             }, 
             outlined: false

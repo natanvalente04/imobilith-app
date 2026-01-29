@@ -1,3 +1,5 @@
+import 'package:alugueis_app/components/mensagem_sucesso.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -19,7 +21,32 @@ class Helper {
     values[numero];
 
   static MaskTextInputFormatter cpfMask = MaskTextInputFormatter(
-        mask: '###.###.###-##',
-        filter: { "#": RegExp(r'[0-9]') },
-      );
+    mask: '###.###.###-##',
+    filter: { "#": RegExp(r'[0-9]') },
+  );
+
+  static MaskTextInputFormatter phoneMask = MaskTextInputFormatter(
+    mask: '(##) # ####-####',
+    filter: { "#": RegExp(r'[0-9]') },
+  );
+
+  static void showSuccessToast(BuildContext context, String message) {
+    final overlay = Overlay.of(context);
+
+    late OverlayEntry entry;
+
+    entry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 20,
+        right: 20,
+        child: MensagemSucesso(message: message),
+      ),
+    );
+
+    overlay.insert(entry);
+
+    Future.delayed(const Duration(seconds: 3), () {
+      entry.remove();
+    });
+  }
 }
