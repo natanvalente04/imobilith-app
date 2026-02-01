@@ -20,6 +20,19 @@ class Helper {
   static T getValueEnum<T>(List<T> values, int numero) =>
     values[numero];
 
+  static int calcularIdade(DateTime nascimento) {
+    final hoje = DateTime.now();
+
+    int idade = hoje.year - nascimento.year;
+
+    if (hoje.month < nascimento.month ||
+        (hoje.month == nascimento.month && hoje.day < nascimento.day)) {
+      idade--;
+    }
+
+    return idade;
+  }
+
   static MaskTextInputFormatter cpfMask = MaskTextInputFormatter(
     mask: '###.###.###-##',
     filter: { "#": RegExp(r'[0-9]') },

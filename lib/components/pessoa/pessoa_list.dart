@@ -2,6 +2,7 @@ import 'package:alugueis_app/components/datagrid/datagrid_delete_button.dart';
 import 'package:alugueis_app/components/datagrid/datagrid_edit_button.dart';
 import 'package:alugueis_app/components/locatario/cad_locatario_dialog.dart';
 import 'package:alugueis_app/components/pessoa/cad_pessoa_dialog.dart';
+import 'package:alugueis_app/helper.dart';
 import 'package:alugueis_app/models/pessoa.dart';
 import 'package:alugueis_app/store/locatario_store.dart';
 import 'package:alugueis_app/store/pessoa_store.dart';
@@ -74,7 +75,7 @@ class _PessoaListState extends State<PessoaList> {
                               onPressed: () {
                                 showDialog(
                                   context: context, 
-                                  builder: (_) => CadPessoaDialog(store: widget.store));
+                                  builder: (_) => CadPessoaDialog(store: widget.store, pessoa: p,));
                               },
                             ),
                             DatagridDeleteButton(
@@ -93,6 +94,7 @@ class _PessoaListState extends State<PessoaList> {
                       DataCell(Text(p.telefone.toString())),
                       DataCell(Text(p.email.toString())),
                       DataCell(Text(p.estadoCivil.label)),
+                      DataCell(Text(Helper.calcularIdade(p.dataNascimento).toString())),
                       DataCell(
                         Checkbox(
                           value: ehLocatario,

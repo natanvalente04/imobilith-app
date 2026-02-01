@@ -38,10 +38,15 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
     @override
     void initState() {
       super.initState();
+      codPessoaController.text = widget.pessoa?.codPessoa.toString() ?? '';
       nomeController.text = widget.pessoa?.nomePessoa ?? "";
       cpfController.text = widget.pessoa?.cpf ?? "";
-      dataNascimentoController.text = widget.pessoa?.dataNascimento.toString() ?? "";
+      rgController.text = widget.pessoa?.rg ?? "";
+      dataNascimentoController.text = Helper.formatDate(widget.pessoa?.dataNascimento ?? DateTime.now()).toString();
       enderecoController.text = widget.pessoa?.endereco ?? "";
+      telefoneController.text = widget.pessoa?.telefone ?? "";
+      emailController.text = widget.pessoa?.email ?? "";
+      estadoCivilSelecionado = widget.pessoa?.estadoCivil;
       if(widget.pessoa != null){
         existe = true;
       }

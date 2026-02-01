@@ -1,3 +1,4 @@
+import 'package:alugueis_app/helper.dart';
 import 'package:alugueis_app/repositories/helper/json_serializable.dart';
 import 'package:equatable/equatable.dart';
 
@@ -98,8 +99,8 @@ class Pessoa extends Equatable implements JsonSerializable {
     endereco: json['endereco'],
     telefone: json['telefone'],
     email: json['email'],
-    estadoCivil: json['estadoCivil'],
-    dataNascimento: json['dataNascimento']
+    estadoCivil: Helper.getValueEnum(EstadoCivil.values, json['estadoCivil']),
+    dataNascimento: DateTime.parse(json['dataNascimento'])
     );
   }
 }
