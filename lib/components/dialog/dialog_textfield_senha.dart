@@ -4,11 +4,13 @@ import 'package:flutter/services.dart';
 
 class DialogTextfieldSenha extends DialogTextfield {
   final bool? enabled;
+  final bool obrigatorio;
   const DialogTextfieldSenha({super.key, 
     required super.controller, 
     required super.labelText, 
     super.keyboardType = TextInputType.text, 
     super.inputFormatters, 
+    this.obrigatorio = true,
     this.enabled = true, 
   });
 
@@ -23,10 +25,10 @@ class _DialogTextfieldSenhaState extends State<DialogTextfieldSenha> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: widget.controller,
       decoration: InputDecoration(
-        labelText: widget.labelText, 
+        labelText: widget.labelText + (widget.obrigatorio ? "*" : ""), 
         suffixIcon: IconButton(
           icon: Icon(obscureText
             ? Icons.visibility_off_outlined
@@ -42,6 +44,11 @@ class _DialogTextfieldSenhaState extends State<DialogTextfieldSenha> {
       
       keyboardType: widget.keyboardType,
       obscureText: obscureText,
+      validator: (value) {
+        if (widget.obrigatorio && (value == null || value.trim().isEmpty)) {
+          return 'Campo Obrigatório!';
+        }
+      },
     );
   }
 }

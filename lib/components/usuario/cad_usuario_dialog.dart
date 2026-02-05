@@ -11,7 +11,7 @@ import 'package:alugueis_app/store/usuario_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CadUsuarioDialog extends StatefulWidget {
+class CadUsuarioDialog extends StatefulWidget  {
   final UsuarioStore store;
   final PessoaStore pessoaStore;
   final LocatarioStore? locatarioStore;
@@ -22,7 +22,8 @@ class CadUsuarioDialog extends StatefulWidget {
   State<CadUsuarioDialog> createState() => _CadUsuarioDialogState();
 }
 
-class _CadUsuarioDialogState extends State<CadUsuarioDialog> {
+class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProviderStateMixin{
+  final _formKey = GlobalKey<FormState>();
   final codUsuarioController = TextEditingController();
   final senhaController = TextEditingController();
   final confirmaSenhaController = TextEditingController();
@@ -31,6 +32,7 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog> {
   int? temPet;
   int? pessoaSelecionada;
   Role? roleSelecionada;
+  bool mostrarCamposLocatario = false;
   bool existe = false;
   bool ativo = true;
 
@@ -39,7 +41,7 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog> {
   void initState(){
     super.initState();
     codUsuarioController.text = widget.usuario?.codUsuario.toString() ?? "";
-    pessoaSelecionada = widget.usuario?.codPessoa ?? 0;
+    pessoaSelecionada = widget.usuario?.codPessoa ?? null;
     senhaController.text = widget.usuario?.senha ?? "";
 
     if(widget.usuario != null){
@@ -53,120 +55,167 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: DialogTitle(title: "Cadastrar usuario"),
-      content: SizedBox(
-        width: 500,
-        height: roleSelecionada == Role.locatario ? 250 : 190,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
+      content: AnimatedSize(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: 190,
+            maxHeight: roleSelecionada == Role.locatario ? 400 : 250,
+            minWidth: 500
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                    width: 120,
-                    child: DialogTextfield(controller: codUsuarioController, labelText: "Código", enabled: false,),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12, bottom: 12),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 120,
+                          child: DialogTextfield(controller: codUsuarioController, labelText: "Código", enabled: false,),
+                        ),
+                        const SizedBox(width: 16,),
+                        Expanded(
+                          child: DialogDropdown(
+                            store: widget.pessoaStore, 
+                            itemsBuilder: (State){
+                              return State.pessoas.map((pessoa) {
+                                return DropdownMenuItem(
+                                  value: pessoa.codPessoa,
+                                  child: Text(pessoa.nomePessoa +' (' + pessoa.cpf + ')'),
+                                );
+                              }).toList();
+                            }, 
+                            value: pessoaSelecionada, 
+                            onChanged: (value){
+                              setState(() {
+                                pessoaSelecionada = value;
+                              });
+                            }, 
+                            label: "Pessoa*"
+                          )
+                        )
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 16,),
-                  Expanded(
-                    child: DialogDropdown(
-                      store: widget.pessoaStore, 
-                      itemsBuilder: (State){
-                        return State.pessoas.map((pessoa) {
-                          return DropdownMenuItem(
-                            value: pessoa.codPessoa,
-                            child: Text(pessoa.cpf.toString() + " - " + pessoa.nomePessoa),
-                          );
-                        }).toList();
-                      }, 
-                      value: pessoaSelecionada, 
-                      onChanged: (value){
-                        setState(() {
-                          pessoaSelecionada = value;
-                        });
-                      }, 
-                      label: "Pessoa*"
-                    )
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12, bottom: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: 140,
+                          child: SwitchListTile(
+                            contentPadding: EdgeInsets.only(right: 20),
+                            title: Text("Ativo"),
+                            value: ativo,
+                            onChanged: (value) {
+                              setState(() => ativo = value);
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: DialogDropdown(
+                            store: ValueNotifier(Role.values),
+                            value: roleSelecionada?.index,
+                            onChanged: (value) async {
+                              Role novaRole = Helper.getValueEnum(Role.values, value!);
+                              if (roleSelecionada == Role.locatario &&
+                                  novaRole != Role.locatario) {
+                                setState(() {
+                                  mostrarCamposLocatario = false;
+                                });
+                                await Future.delayed(const Duration(milliseconds: 200));
+                                setState(() {
+                                  roleSelecionada = novaRole;
+                                });
+
+                                return;
+                              }
+
+                              if (novaRole == Role.locatario) {
+                                setState(() {
+                                  roleSelecionada = novaRole;
+                                  mostrarCamposLocatario = true;
+                                });
+                                return;
+                              }
+                            },
+                            label: "Tipo Usuario*",
+                            itemsBuilder: (values){
+                              return values.map<DropdownMenuItem<int>>((ec) {
+                                return DropdownMenuItem(
+                                  value: ec.index,
+                                  child: Text(ec.label),
+                                );
+                              }).toList();
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    child: mostrarCamposLocatario
+                      ? Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 12),
+                        child: Row(
+                        children: [
+                          Expanded(
+                            child: DialogTextfieldNumeric(
+                              controller: dependentesController,
+                              labelText: "Quantidade de dependentes",
+                              obrigatorio: true,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: DropdownButtonFormField(
+                              value: temPet,
+                              decoration: const InputDecoration(
+                                labelText: "Possui pet?*",
+                              ),
+                              items: const [
+                                DropdownMenuItem(value: 1, child: Text("Sim")),
+                                DropdownMenuItem(value: 0, child: Text("Não"))
+                              ],
+                              onChanged: (value){
+                                setState((){
+                                  temPet = value;
+                                });
+                              }
+                            ),
+                          )
+                        ],
+                                          ),
+                      )
+                    : const SizedBox.shrink(),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12, bottom: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: DialogTextfieldSenha(controller: senhaController, labelText: "Senha",),
+                        ),
+                        const SizedBox(width: 16,),
+                        Expanded(
+                          child: DialogTextfieldSenha(controller: confirmaSenhaController, labelText: "Confirma senha"),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 140,
-                    child: SwitchListTile(
-                      contentPadding: EdgeInsets.only(right: 20),
-                      title: Text("Ativo"),
-                      value: ativo,
-                      onChanged: (value) {
-                        setState(() => ativo = value);
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: DialogDropdown(
-                      store: ValueNotifier(Role.values),
-                      value: roleSelecionada?.index,
-                      onChanged: (value){
-                        setState(() {
-                          roleSelecionada = Helper.getValueEnum(Role.values, value!);
-                        });
-                      },
-                      label: "Tipo Usuario*",
-                      itemsBuilder: (values){
-                        return values.map<DropdownMenuItem<int>>((ec) {
-                          return DropdownMenuItem(
-                            value: ec.index,
-                            child: Text(ec.label),
-                          );
-                        }).toList();
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              if (roleSelecionada == Role.locatario) Row(
-                  children: [
-                    Expanded(
-                      child: DialogTextfieldNumeric(
-                        controller: dependentesController,
-                        labelText: "Quantidade de dependentes*",
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: DropdownButtonFormField(
-                        value: temPet,
-                        decoration: const InputDecoration(
-                          labelText: "Possui pet?*",
-                        ),
-                        items: const [
-                          DropdownMenuItem(value: 1, child: Text("Sim")),
-                          DropdownMenuItem(value: 0, child: Text("Não"))
-                        ],
-                        onChanged: (value){
-                          setState((){
-                            temPet = value;
-                          });
-                        }
-                      ),
-                    )
-                  ],
-                ),
-              Row(
-                children: [
-                  Expanded(
-                    child: DialogTextfieldSenha(controller: senhaController, labelText: "Senha*"),
-                  ),
-                  const SizedBox(width: 16,),
-                  Expanded(
-                    child: DialogTextfieldSenha(controller: confirmaSenhaController, labelText: "Confirma senha*"),
-                  ),
-                ],
-              )
-            ],
           ),
         ),
+      ),
         actions: [
         TextButton(
           onPressed: (){
@@ -176,6 +225,9 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog> {
         ),
         ElevatedButton(
           onPressed: () {
+            if (!_formKey.currentState!.validate()) {
+            return;
+          }
             Usuario novoUsuario = Usuario(
               codUsuario: int.tryParse(codUsuarioController.text) ?? 0,
               codPessoa: pessoaSelecionada ?? 0,

@@ -6,7 +6,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DialogTextfieldCpf extends DialogTextfield {
   final MaskTextInputFormatter inputFormatter = Helper.cpfMask;
-  DialogTextfieldCpf({super.key, required super.controller, super.labelText = "CPF*"});
+  DialogTextfieldCpf({super.key, required super.controller, super.labelText = "CPF"});
 
   @override
   State<DialogTextfieldCpf> createState() => _DialogTextfieldCpfState();
@@ -19,7 +19,8 @@ class _DialogTextfieldCpfState extends State<DialogTextfieldCpf>{
       controller: widget.controller,
       labelText: widget.labelText,
       keyboardType: TextInputType.number,
-      inputFormatters: [widget.inputFormatter],                  
+      inputFormatters: [widget.inputFormatter],
+      obrigatorio: true,                  
     );
   } 
 }

@@ -4,7 +4,7 @@ import 'package:flutter/src/services/text_formatter.dart';
 
 class DialogTextfieldNumeric extends DialogTextfield {
 
-  const DialogTextfieldNumeric({super.key, required super.controller,required super.labelText, super.enabled=true});
+  const DialogTextfieldNumeric({super.key, required super.controller,required super.labelText, super.enabled=true, super.obrigatorio});
 
   @override
   State<DialogTextfieldNumeric> createState() => _DialogTextfieldNumericState();
@@ -19,6 +19,7 @@ class _DialogTextfieldNumericState extends State<DialogTextfieldNumeric> {
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       enabled: widget.enabled,
+      obrigatorio: widget.obrigatorio,
     );
   }
 }

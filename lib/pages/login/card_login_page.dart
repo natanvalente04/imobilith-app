@@ -19,6 +19,7 @@ class CardLoginPage extends StatefulWidget {
 }
 
 class _CardLoginPageState extends State<CardLoginPage> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
 
   final TextEditingController senhaController = TextEditingController();
@@ -37,67 +38,74 @@ class _CardLoginPageState extends State<CardLoginPage> {
               padding: const EdgeInsets.all(24.0),
               child: SizedBox(
                 width: 320,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Stack(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.arrow_back),
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => LoginPage()),
-                            );
-                          },
-                        ),
-                        Center(
-                          child: Text(
-                            'Login',
-                            style: TextStyle(
-                              fontSize: 22,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Stack(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.arrow_back),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => LoginPage()),
+                              );
+                            },
+                          ),
+                          Center(
+                            child: Text(
+                              'Login',
+                              style: TextStyle(
+                                fontSize: 22,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-
-                    DialogTextfield(
-                      controller: emailController,
-                      labelText: 'E-mail',
-                    ),
-
-                    const SizedBox(height: 16),
-
-                    DialogTextfieldSenha(
-                      controller: senhaController,
-                      labelText: 'Senha',
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48,
-                      child: LoginButton(
-                        onPressed: () async {
-                          UsuarioLogin usuarioLogin = UsuarioLogin(
-                            login: emailController.text,
-                            senha: senhaController.text,
-                          );
-                          await widget.store.Login(usuarioLogin);
-                          if (await TokenStorage.isLoggedIn()){
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => Menu()),
-                            );
-                          }
-                        },
-                        text:'Entrar',
+                        ],
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 24),
+                  
+                      DialogTextfield(
+                        controller: emailController,
+                        labelText: 'E-mail',
+                        obrigatorio: true,
+                      ),
+                  
+                      const SizedBox(height: 16),
+                  
+                      DialogTextfieldSenha(
+                        controller: senhaController,
+                        labelText: 'Senha',
+                      ),
+                  
+                      const SizedBox(height: 24),
+                  
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: LoginButton(
+                          onPressed: () async {
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
+                            UsuarioLogin usuarioLogin = UsuarioLogin(
+                              login: emailController.text,
+                              senha: senhaController.text,
+                            );
+                            await widget.store.Login(usuarioLogin);
+                            if (await TokenStorage.isLoggedIn()){
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => Menu()),
+                              );
+                            }
+                          },
+                          text:'Entrar',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

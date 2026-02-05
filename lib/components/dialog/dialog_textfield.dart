@@ -7,7 +7,15 @@ class DialogTextfield extends StatefulWidget{
   final TextInputType keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final bool? enabled;
-  const DialogTextfield({super.key, required this.controller, required this.labelText, this.keyboardType = TextInputType.text, this.inputFormatters, this.enabled = true});
+  final bool obrigatorio;
+  const DialogTextfield({super.key, 
+    required this.controller, 
+    required this.labelText, 
+    this.keyboardType = TextInputType.text, 
+    this.inputFormatters, 
+    this.enabled = true, 
+    this.obrigatorio = false
+  });
 
   @override
   State<DialogTextfield> createState() => _DialogTextfieldState();
@@ -16,12 +24,17 @@ class DialogTextfield extends StatefulWidget{
 class _DialogTextfieldState extends State<DialogTextfield> {
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: widget.controller,
-      decoration: InputDecoration(labelText: widget.labelText),
+      decoration: InputDecoration(labelText: widget.labelText + (widget.obrigatorio ? "*" : "")),
       keyboardType: widget.keyboardType,
       inputFormatters: widget.inputFormatters,
       enabled: widget.enabled,
+      validator: (value) {
+        if (widget.obrigatorio && (value == null || value.trim().isEmpty)) {
+          return 'Campo Obrigatório!';
+        }
+      },
     );
   }
 }

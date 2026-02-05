@@ -5,7 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DialogTextfieldPhone extends DialogTextfield {
   final MaskTextInputFormatter inputFormatter = Helper.phoneMask;
-  DialogTextfieldPhone({super.key, required super.controller, required super.labelText});
+  DialogTextfieldPhone({super.key, required super.controller, required super.labelText, super.obrigatorio});
 
   @override
   State<DialogTextfieldPhone> createState() => _DialogTextfieldPhoneState();
@@ -18,7 +18,8 @@ class _DialogTextfieldPhoneState extends State<DialogTextfieldPhone> {
       controller: widget.controller,
       labelText: widget.labelText,
       keyboardType: TextInputType.number,
-      inputFormatters: [widget.inputFormatter],                  
+      inputFormatters: [widget.inputFormatter],
+      obrigatorio: widget.obrigatorio,           
     );
   }
 }

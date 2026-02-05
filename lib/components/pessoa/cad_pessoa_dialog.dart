@@ -22,6 +22,7 @@ class CadPessoaDialog extends StatefulWidget {
 }
 
 class _CadPessoaDialogState extends State<CadPessoaDialog> {
+  final _formKey = GlobalKey<FormState>();
     final codPessoaController = TextEditingController();
     final nomeController = TextEditingController();
     final cpfController = TextEditingController();
@@ -57,95 +58,98 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
       title: DialogTitle(title: "Cadastrar Pessoa"),
       content: SizedBox(
         width: 750,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                SizedBox(
-                      width: 60,
-                      child: DialogTextfieldNumeric(controller: codPessoaController, labelText: "Codigo", enabled: false),
-                    ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: DialogTextfield(controller: nomeController, labelText: "Nome*"),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: DialogTextfieldCpf(controller: cpfController),
-                ),                
-                const SizedBox(width: 16),
-                Expanded(
-                  child: DialogTextfieldNumeric(controller: rgController, labelText: "RG")
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            DialogTextfield(controller: enderecoController, labelText: "Ultimo Endereço*"),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: DialogTextfield(controller: telefoneController, labelText: "Telefone/Celular"),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: DialogDropdown(
-                    store: ValueNotifier(EstadoCivil.values),
-                    value: estadoCivilSelecionado?.index,
-                    onChanged: (value){
-                      setState(() {
-                        estadoCivilSelecionado = Helper.getValueEnum(EstadoCivil.values, value!);
-                      });
-                    },
-                    label: "Estado Civil*",
-                    itemsBuilder: (values){
-                      return values.map<DropdownMenuItem<int>>((ec) {
-                        return DropdownMenuItem(
-                          value: ec.index,
-                          child: Text(ec.label),
-                        );
-                      }).toList();
-                    },
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                        width: 60,
+                        child: DialogTextfieldNumeric(controller: codPessoaController, labelText: "Codigo", enabled: false),
+                      ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DialogTextfield(controller: nomeController, labelText: "Nome", obrigatorio: true,),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: dataNascimentoController,
-                    readOnly: true,
-                    decoration: const InputDecoration(
-                      labelText: "Data Nascimento*",
-                    ),
-                    onTap: () async {
-                      final DateTime? selecionado = await showDatePicker(
-                        context: context,
-                        firstDate: DateTime(DateTime.now().year - 150),
-                        lastDate: DateTime(DateTime.now().year + 1),
-                      );
-                      if (selecionado != null) {
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: DialogTextfieldCpf(controller: cpfController),
+                  ),                
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DialogTextfieldNumeric(controller: rgController, labelText: "RG")
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              DialogTextfield(controller: enderecoController, labelText: "Ultimo Endereço", obrigatorio: true,),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: DialogTextfield(controller: telefoneController, labelText: "Telefone/Celular"),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DialogDropdown(
+                      store: ValueNotifier(EstadoCivil.values),
+                      value: estadoCivilSelecionado?.index,
+                      onChanged: (value){
                         setState(() {
-                          dataNascimentoController.text = Helper.formatDate(selecionado);
+                          estadoCivilSelecionado = Helper.getValueEnum(EstadoCivil.values, value!);
                         });
-                      }
-                    },
+                      },
+                      label: "Estado Civil*",
+                      itemsBuilder: (values){
+                        return values.map<DropdownMenuItem<int>>((ec) {
+                          return DropdownMenuItem(
+                            value: ec.index,
+                            child: Text(ec.label),
+                          );
+                        }).toList();
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: DialogTextfield(controller: emailController, labelText: "E-mail*"),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: dataNascimentoController,
+                      readOnly: true,
+                      decoration: const InputDecoration(
+                        labelText: "Data Nascimento*",
+                      ),
+                      onTap: () async {
+                        final DateTime? selecionado = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime(DateTime.now().year - 150),
+                          lastDate: DateTime(DateTime.now().year + 1),
+                        );
+                        if (selecionado != null) {
+                          setState(() {
+                            dataNascimentoController.text = Helper.formatDate(selecionado);
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DialogTextfield(controller: emailController, labelText: "E-mail", obrigatorio: true,),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -155,6 +159,9 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
         ),
         ElevatedButton(
           onPressed: () {
+            if (!_formKey.currentState!.validate()) {
+            return;
+          }
             Pessoa novaPessoa = Pessoa(
               codPessoa: int.tryParse(codPessoaController.text) ?? 0,
               nomePessoa: nomeController.text,

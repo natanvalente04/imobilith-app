@@ -1,3 +1,4 @@
+import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
 import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/models/predio.dart';
 import 'package:alugueis_app/store/predio_store.dart';
@@ -14,6 +15,7 @@ class CadPredioDialog extends StatefulWidget {
 }
 
 class _CAdPredioDialogState extends State<CadPredioDialog> {
+  final _formKey = GlobalKey<FormState>();
   final codPredioController = TextEditingController();
   final nomePredioController = TextEditingController();
   final enderecoController = TextEditingController();
@@ -34,49 +36,49 @@ class _CAdPredioDialogState extends State<CadPredioDialog> {
       title: DialogTitle(title: 'Cadastrar Predio'),
       content: SizedBox(
         width: 650,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                SizedBox(
-                  width: 60,
-                  child: TextField(
-                    controller: codPredioController,
-                    decoration: InputDecoration(labelText: "codigo"),
-                    keyboardType: TextInputType.number,
-                    enabled: false,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 60,
+                    child: TextField(
+                      controller: codPredioController,
+                      decoration: InputDecoration(labelText: "codigo"),
+                      keyboardType: TextInputType.number,
+                      enabled: false,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: TextField(
-                    controller: nomePredioController,
-                    decoration: InputDecoration(labelText: "nome*"),
-                    keyboardType: TextInputType.text,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: DialogTextfield(
+                      controller: nomePredioController,
+                      labelText: "nome",
+                      obrigatorio: true,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                SizedBox(
-                  width: 100,
-                  child: TextField(
-                    controller: qtdAndaresController,
-                    decoration: InputDecoration(labelText: "qtd andares*"),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: enderecoController,
-              decoration: InputDecoration(labelText: "endereço*"),
-              keyboardType: TextInputType.text,
-            ),
-          ],
+                  const SizedBox(width: 16),
+                  SizedBox(
+                    width: 100,
+                    child: DialogTextfield(
+                      controller: qtdAndaresController,
+                      labelText: "qtd andares",
+                      obrigatorio: true,
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 16),
+              DialogTextfield(
+                controller: enderecoController,
+                labelText: "endereço",
+                obrigatorio: true,
+              ),
+            ],
+          ),
         )
       ),
       actions: [
@@ -86,6 +88,9 @@ class _CAdPredioDialogState extends State<CadPredioDialog> {
         ),
         ElevatedButton(
           onPressed: (){
+            if (!_formKey.currentState!.validate()) {
+            return;
+          }
             Predio novoPredio = Predio(
               codPredio: int.tryParse(codPredioController.text) ?? 0,
               nomePredio: nomePredioController.text,

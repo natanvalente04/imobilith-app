@@ -21,6 +21,7 @@ class CadAptoDialog extends StatefulWidget {
 }
 
 class _CadAptoDialogState extends State<CadAptoDialog> {
+  final _formKey = GlobalKey<FormState>();
   final codAptoController = TextEditingController();
   final andarController = TextEditingController();
   final qtdBanheirosController = TextEditingController();
@@ -51,58 +52,61 @@ class _CadAptoDialogState extends State<CadAptoDialog> {
       title: DialogTitle(title: 'Cadastrar Apartamento'),
       content: SizedBox(
         width: 750,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: DialogTextfieldNumeric(controller: codAptoController, labelText: "codApto*", enabled: !existe),
-                ),
-                const SizedBox(width: 16,),
-                Expanded(
-                  child: DialogTextfieldNumeric(controller: andarController,labelText: "andar*"),
-                ),
-                const SizedBox(width: 16,),
-                Expanded(
-                  child: DialogDropdown(
-                    store: widget.predioStore,
-                    value: predioSelecionado,
-                    onChanged: (value){
-                      setState(() {
-                        predioSelecionado = value;
-                      });
-                    },
-                    label: "Predio*",
-                    itemsBuilder:(State) {
-                      return State.predios.map((p) {
-                          return DropdownMenuItem(
-                            value: p.codPredio,
-                            child: Text(p.codPredio.toString() + " - " + p.nomePredio),
-                          ); 
-                        }).toList();
-                    }
-                  ) 
-                )
-              ]
-            ),
-            const SizedBox(height: 16,),
-            Row(
-              children: [
-                Expanded(
-                  child: DialogTextfieldNumeric(controller: qtdBanheirosController,labelText: "Quantidade Banheiros*")
-                ),
-                const SizedBox(width: 16,),
-                Expanded(
-                  child: DialogTextfieldNumeric(controller: qtdQuartosController,labelText: "Quantidade Quartos")
-                ),
-                const SizedBox(width: 16,),
-                Expanded(
-                  child: DialogTextfieldNumeric(controller: metrosQuadradosController,labelText: "Metros Quadrados")
-                )
-              ],
-            )
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: DialogTextfieldNumeric(controller: codAptoController, labelText: "codApto", enabled: !existe, obrigatorio: true,),
+                  ),
+                  const SizedBox(width: 16,),
+                  Expanded(
+                    child: DialogTextfieldNumeric(controller: andarController,labelText: "andar", obrigatorio: true,),
+                  ),
+                  const SizedBox(width: 16,),
+                  Expanded(
+                    child: DialogDropdown(
+                      store: widget.predioStore,
+                      value: predioSelecionado,
+                      onChanged: (value){
+                        setState(() {
+                          predioSelecionado = value;
+                        });
+                      },
+                      label: "Predio*",
+                      itemsBuilder:(State) {
+                        return State.predios.map((p) {
+                            return DropdownMenuItem(
+                              value: p.codPredio,
+                              child: Text(p.codPredio.toString() + " - " + p.nomePredio),
+                            ); 
+                          }).toList();
+                      }
+                    ) 
+                  )
+                ]
+              ),
+              const SizedBox(height: 16,),
+              Row(
+                children: [
+                  Expanded(
+                    child: DialogTextfieldNumeric(controller: qtdBanheirosController,labelText: "Quantidade Banheiros", obrigatorio: true,)
+                  ),
+                  const SizedBox(width: 16,),
+                  Expanded(
+                    child: DialogTextfieldNumeric(controller: qtdQuartosController,labelText: "Quantidade Quartos", obrigatorio: true,)
+                  ),
+                  const SizedBox(width: 16,),
+                  Expanded(
+                    child: DialogTextfieldNumeric(controller: metrosQuadradosController,labelText: "Metros Quadrados", obrigatorio: true,)
+                  )
+                ],
+              )
+            ],
+          ),
         )
       ),
       actions: [
@@ -114,6 +118,9 @@ class _CadAptoDialogState extends State<CadAptoDialog> {
         ),
         ElevatedButton(
           onPressed: () {
+            if (!_formKey.currentState!.validate()) {
+              return;
+            }
             Apto novoApto = Apto(
               codApto: int.tryParse(codAptoController.text) ?? 0,
               codPredio: predioSelecionado,

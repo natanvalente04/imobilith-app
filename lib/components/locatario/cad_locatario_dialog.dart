@@ -22,6 +22,7 @@ class CadLocatarioDialog extends StatefulWidget {
 
 
 class _CadLocatarioDialogState extends State<CadLocatarioDialog> {
+  final _formKey = GlobalKey<FormState>();
     final dependentesController = TextEditingController();
     int? temPet;
     bool existe = false;
@@ -37,30 +38,34 @@ class _CadLocatarioDialogState extends State<CadLocatarioDialog> {
       title: DialogTitle(title: "Cadastrar Locatario"),
       content: SizedBox(
         width: 120,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DialogTextfieldNumeric(
-              controller: dependentesController,
-              labelText: "Quantidade de dependentes*",
-            ),
-            const SizedBox(width: 16),
-            DropdownButtonFormField(
-              value: temPet,
-              decoration: const InputDecoration(
-                labelText: "Possui pet?*",
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DialogTextfieldNumeric(
+                controller: dependentesController,
+                labelText: "Quantidade de dependentes",
+                obrigatorio: true
               ),
-              items: const [
-                DropdownMenuItem(value: 1, child: Text("Sim")),
-                DropdownMenuItem(value: 0, child: Text("Não"))
-              ],
-              onChanged: (value){
-                setState((){
-                  temPet = value;
-                });
-              }
-            ),
-          ],
+              const SizedBox(width: 16),
+              DropdownButtonFormField(
+                value: temPet,
+                decoration: const InputDecoration(
+                  labelText: "Possui pet?*",
+                ),
+                items: const [
+                  DropdownMenuItem(value: 1, child: Text("Sim")),
+                  DropdownMenuItem(value: 0, child: Text("Não"))
+                ],
+                onChanged: (value){
+                  setState((){
+                    temPet = value;
+                  });
+                }
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -70,6 +75,9 @@ class _CadLocatarioDialogState extends State<CadLocatarioDialog> {
         ),
         ElevatedButton(
           onPressed: () {
+            if (!_formKey.currentState!.validate()) {
+            return;
+          }
             Locatario novoLocatario = Locatario(
               codLocatario: 0,
               codPessoa: widget.codPessoa ?? 0,
