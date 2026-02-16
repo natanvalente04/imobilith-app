@@ -8,13 +8,17 @@ class DialogTextfield extends StatefulWidget{
   final List<TextInputFormatter>? inputFormatters;
   final bool? enabled;
   final bool obrigatorio;
+  final FocusNode? focusNode;
+  final Function(String)? onSubmitted;
   const DialogTextfield({super.key, 
     required this.controller, 
-    required this.labelText, 
+    required this.labelText,
     this.keyboardType = TextInputType.text, 
     this.inputFormatters, 
     this.enabled = true, 
-    this.obrigatorio = false
+    this.obrigatorio = false,
+    this.onSubmitted,
+    this.focusNode
   });
 
   @override
@@ -26,6 +30,8 @@ class _DialogTextfieldState extends State<DialogTextfield> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+      focusNode: widget.focusNode,
+      onFieldSubmitted: widget.onSubmitted,
       decoration: InputDecoration(labelText: widget.labelText + (widget.obrigatorio ? "*" : "")),
       keyboardType: widget.keyboardType,
       inputFormatters: widget.inputFormatters,

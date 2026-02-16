@@ -10,6 +10,8 @@ class DialogTextfieldSenha extends DialogTextfield {
     required super.labelText, 
     super.keyboardType = TextInputType.text, 
     super.inputFormatters, 
+    super.focusNode,
+    super.onSubmitted,
     this.obrigatorio = true,
     this.enabled = true, 
   });
@@ -27,6 +29,8 @@ class _DialogTextfieldSenhaState extends State<DialogTextfieldSenha> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+      focusNode: widget.focusNode,
+      onFieldSubmitted: widget.onSubmitted,
       decoration: InputDecoration(
         labelText: widget.labelText + (widget.obrigatorio ? "*" : ""), 
         suffixIcon: IconButton(

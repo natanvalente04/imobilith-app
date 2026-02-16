@@ -22,6 +22,17 @@ class LocatarioRepository {
     return repositoryHelper.parseListT<Locatario>(jsonRaw, Locatario.fromJson);
   }
 
+  Future<Locatario> getLocatarioById(int codLocataraio) async {
+    final token = await TokenStorage.getToken();
+    final response = await client.get(Uri.parse(uriLocatario + codLocataraio.toString()),
+      headers: {
+          'Authorization': 'Bearer $token'
+      },
+    );
+    final jsonRaw = response.body;
+    return repositoryHelper.parseT<Locatario>(jsonRaw, Locatario.fromJson);
+  }
+
   Future addLocatario(Locatario locatario) async {
     String json = repositoryHelper.parseToJson(locatario);
     final token = await TokenStorage.getToken();

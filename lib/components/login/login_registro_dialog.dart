@@ -43,8 +43,8 @@ class _LoginRegistroDialogState extends State<LoginRegistroDialog> {
     return Dialog(
       insetPadding: const EdgeInsets.all(24),
       child: SizedBox(
-        width: 490,
-        height: MediaQuery.of(context).size.height * 0.8,
+        width: 550,
+        height: 650,
         child: Form(
           key: _formKey,
           child: Card(
@@ -59,7 +59,7 @@ class _LoginRegistroDialogState extends State<LoginRegistroDialog> {
                   children: [
                     DialogTitle(title: "Registrar-se", fontSize: 24,),
                     Container(
-                      height: 420,
+                      height: 500,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

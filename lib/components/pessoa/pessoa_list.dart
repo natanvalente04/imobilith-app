@@ -3,6 +3,7 @@ import 'package:alugueis_app/components/datagrid/datagrid_edit_button.dart';
 import 'package:alugueis_app/components/locatario/cad_locatario_dialog.dart';
 import 'package:alugueis_app/components/pessoa/cad_pessoa_dialog.dart';
 import 'package:alugueis_app/helper.dart';
+import 'package:alugueis_app/models/locatario.dart';
 import 'package:alugueis_app/models/pessoa.dart';
 import 'package:alugueis_app/store/locatario_store.dart';
 import 'package:alugueis_app/store/pessoa_store.dart';
@@ -22,6 +23,7 @@ class _PessoaListState extends State<PessoaList> {
   void initState(){
     super.initState();
     widget.store.addListener(_listener);
+    locatarioStore.addListener(_listenerLocatario);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.store.getPessoas();
@@ -34,8 +36,15 @@ class _PessoaListState extends State<PessoaList> {
     });
   }
   
+  void _listenerLocatario() {
+    setState(() {
+
+    });
+  }
+
   void dispose(){
     widget.store.removeListener(_listener);
+    widget.store.removeListener(_listenerLocatario);
     super.dispose();
   }
 
@@ -65,6 +74,13 @@ class _PessoaListState extends State<PessoaList> {
                   DataColumn(label: Text('Locatário'))
                 ], 
                 rows: state.pessoas.map((p) {
+                  if(p.codLocatario == null){
+                    ehLocatario = false;
+                  }else if( p.codLocatario! <= 0){
+                    ehLocatario = false;
+                  }else{
+                    ehLocatario = true;
+                  }
                   return DataRow(
                     cells: [
                       DataCell(
@@ -98,14 +114,19 @@ class _PessoaListState extends State<PessoaList> {
                       DataCell(
                         Checkbox(
                           value: ehLocatario,
-                          onChanged: (value) {
+                          onChanged: (value) async {
                             if(value!){
-                              showDialog(
+                              await showDialog(
                                 context: context, 
-                                builder: (_) => CadLocatarioDialog(store: locatarioStore, codPessoa: p.codPessoa,)
+                                builder: await (_) => CadLocatarioDialog(store: locatarioStore, codPessoa: p.codPessoa,)
                               );
+                              await widget.store.getPessoas();
                             }
-                            setState(() => ehLocatario = value);
+                            setState(()
+                              {
+                                ehLocatario = value;
+                              }
+                            );
                           },
                         )
                       ),

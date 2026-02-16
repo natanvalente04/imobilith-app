@@ -23,6 +23,7 @@ class _CardLoginPageState extends State<CardLoginPage> {
   final TextEditingController emailController = TextEditingController();
 
   final TextEditingController senhaController = TextEditingController();
+  final focusSenha = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -70,13 +71,16 @@ class _CardLoginPageState extends State<CardLoginPage> {
                         controller: emailController,
                         labelText: 'E-mail',
                         obrigatorio: true,
+                        onSubmitted: (_) => FocusScope.of(context).requestFocus(focusSenha),
                       ),
                   
                       const SizedBox(height: 16),
                   
                       DialogTextfieldSenha(
                         controller: senhaController,
+                        focusNode: focusSenha,
                         labelText: 'Senha',
+                        onSubmitted: (_) => login(),
                       ),
                   
                       const SizedBox(height: 24),
@@ -86,20 +90,7 @@ class _CardLoginPageState extends State<CardLoginPage> {
                         height: 48,
                         child: LoginButton(
                           onPressed: () async {
-                            if (!_formKey.currentState!.validate()) {
-                              return;
-                            }
-                            UsuarioLogin usuarioLogin = UsuarioLogin(
-                              login: emailController.text,
-                              senha: senhaController.text,
-                            );
-                            await widget.store.Login(usuarioLogin);
-                            if (await TokenStorage.isLoggedIn()){
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => Menu()),
-                              );
-                            }
+                            login();
                           },
                           text:'Entrar',
                         ),
@@ -113,5 +104,22 @@ class _CardLoginPageState extends State<CardLoginPage> {
         ),
       ),
     );
+  }
+
+  void login() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    UsuarioLogin usuarioLogin = UsuarioLogin(
+      login: emailController.text,
+      senha: senhaController.text,
+    );
+    await widget.store.Login(usuarioLogin);
+    if (await TokenStorage.isLoggedIn()){
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Menu()),
+      );
+    }
   }
 }

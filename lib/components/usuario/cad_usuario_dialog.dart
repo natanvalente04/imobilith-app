@@ -4,6 +4,8 @@ import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_senha.dart';
 import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/helper.dart';
+import 'package:alugueis_app/models/locatario.dart';
+import 'package:alugueis_app/models/pessoa.dart';
 import 'package:alugueis_app/models/usuario.dart';
 import 'package:alugueis_app/store/locatario_store.dart';
 import 'package:alugueis_app/store/pessoa_store.dart';
@@ -14,9 +16,9 @@ import 'package:flutter/services.dart';
 class CadUsuarioDialog extends StatefulWidget  {
   final UsuarioStore store;
   final PessoaStore pessoaStore;
-  final LocatarioStore? locatarioStore;
+  final LocatarioStore locatarioStore;
   final Usuario? usuario;
-  const CadUsuarioDialog({super.key, required this.store, required this.pessoaStore, this.usuario, this.locatarioStore});
+  const CadUsuarioDialog({super.key, required this.store, required this.pessoaStore, this.usuario, required this.locatarioStore});
 
   @override
   State<CadUsuarioDialog> createState() => _CadUsuarioDialogState();
@@ -29,21 +31,28 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
   final confirmaSenhaController = TextEditingController();
   final codLocatarioController = TextEditingController();
   final dependentesController = TextEditingController();
+  Locatario? locatarioAtual;
   int? temPet;
   int? pessoaSelecionada;
   Role? roleSelecionada;
   bool mostrarCamposLocatario = false;
   bool existe = false;
+  bool existeLocatario = false;
   bool ativo = true;
 
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     codUsuarioController.text = widget.usuario?.codUsuario.toString() ?? "";
     pessoaSelecionada = widget.usuario?.codPessoa ?? null;
-    senhaController.text = widget.usuario?.senha ?? "";
-
+    codLocatarioController.text = locatarioAtual?.codLocatario.toString() ?? "";
+    temPet = locatarioAtual?.temPet ?? null;
+    dependentesController.text = locatarioAtual?.qtdDependentes.toString() ?? "";
+    roleSelecionada = widget.usuario?.role;
+    if(pessoaSelecionada != null){
+      _GetLocatarioByPessoaId(pessoaSelecionada!);
+    }
     if(widget.usuario != null){
       existe = true;
     }
@@ -91,9 +100,35 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
                               }).toList();
                             }, 
                             value: pessoaSelecionada, 
-                            onChanged: (value){
+                            onChanged: (value) async {
+                              if(value != null){
+                                Locatario? locatario = await GetLocatarioByPessoaIdAsync(value!);
+                                if(locatario != null){
+                                  setState(() {
+                                    pessoaSelecionada = value;
+                                    roleSelecionada = Role.locatario;
+                                    locatarioAtual = locatario;
+                                    mostrarCamposLocatario = true;
+                                    existeLocatario = mostrarCamposLocatario; 
+                                    codLocatarioController.text = locatarioAtual?.codLocatario.toString() ?? "";
+                                    temPet = locatarioAtual?.temPet ?? null;
+                                    dependentesController.text = locatarioAtual?.qtdDependentes.toString() ?? "";
+                                  });
+                                  return;
+                                }
+                              }
                               setState(() {
-                                pessoaSelecionada = value;
+                                    locatarioAtual = null;
+                                    pessoaSelecionada = value;
+                                    mostrarCamposLocatario = false;
+                                    existeLocatario = mostrarCamposLocatario; 
+                                    codLocatarioController.text = locatarioAtual?.codLocatario.toString() ?? "";
+                                    temPet = locatarioAtual?.temPet ?? null;
+                                    dependentesController.text = locatarioAtual?.qtdDependentes.toString() ?? "";
+                              });
+                              await Future.delayed(const Duration(milliseconds: 200));
+                              setState(() {
+                                roleSelecionada = null;
                               });
                             }, 
                             label: "Pessoa*"
@@ -235,6 +270,17 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
               role: Helper.getValueEnum(Role.values, roleSelecionada!.index),
               senha: senhaController.text,
             );
+            if(roleSelecionada == Role.locatario){
+              Locatario novoLocatario = Locatario(
+                codLocatario: int.tryParse(codLocatarioController.text) ?? 0, 
+                codPessoa: pessoaSelecionada ?? 0, 
+                temPet: temPet ?? 0, 
+                qtdDependentes: int.tryParse(dependentesController.text) ?? 0,
+              );
+              existeLocatario ?
+              widget.locatarioStore.updateLocatario(novoLocatario)
+              : widget.locatarioStore.addLocatario(novoLocatario);
+            }
             existe ?
             widget.store.updateUsuario(novoUsuario)
             : widget.store.addUsuario(novoUsuario);
@@ -244,5 +290,38 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
         )
       ],
     );
+  }
+
+  Future<void> _GetLocatarioByPessoaId(int codPessoa) async {
+    Pessoa? pessoa = await widget.pessoaStore.getPessoaById(codPessoa);
+    if(pessoa!.codLocatario == null) {
+      return;
+    }
+    Locatario? locatario = await widget.locatarioStore.GetLocatarioById(pessoa.codLocatario!);
+
+    if(!mounted) return;
+
+    if(locatario != null){
+      setState(() {
+        roleSelecionada = Role.locatario;
+        locatarioAtual = locatario;
+        mostrarCamposLocatario = true;
+        existeLocatario = mostrarCamposLocatario; 
+        codLocatarioController.text = locatarioAtual?.codLocatario.toString() ?? "";
+        temPet = locatarioAtual?.temPet ?? null;
+        dependentesController.text = locatarioAtual?.qtdDependentes.toString() ?? "";
+      });
+    }
+  }
+
+  Future<Locatario?> GetLocatarioByPessoaIdAsync(int codPessoa) async {
+    Pessoa? pessoa = await widget.pessoaStore.getPessoaById(codPessoa);
+
+    if(pessoa!.codLocatario == null) return null;
+    if( pessoa.codLocatario! <= 0) return null;
+
+    Locatario? locatario = await widget.locatarioStore.GetLocatarioById(pessoa.codLocatario!);
+
+    return locatario;
   }
 }

@@ -23,4 +23,9 @@ class PessoaStore extends ValueNotifier<PessoaState> {
     await repository.updatePessoa(pessoaAtualizada);
     getPessoas();
   }
+
+  Future<Pessoa?> getPessoaById(int codPessoa) async {
+    Pessoa? pessoa = await repository.getPessoaById(codPessoa);
+    return pessoa;
+  }
 }

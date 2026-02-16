@@ -1,3 +1,4 @@
+import 'package:alugueis_app/helper.dart';
 import 'package:alugueis_app/repositories/helper/json_serializable.dart';
 import 'package:equatable/equatable.dart';
 
@@ -68,8 +69,8 @@ class Usuario extends Equatable implements JsonSerializable {
     return Usuario(
       codUsuario: json['codUsuario'],
       codPessoa: json['codPessoa'], 
-      role: json['role'], 
-      senha: json['senha'], 
+      role: Helper.getValueEnum(Role.values, json['role']), 
+      senha: "", 
       ativo: json['ativo']
     );
   }

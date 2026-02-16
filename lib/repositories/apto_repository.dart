@@ -32,7 +32,11 @@ class AptoRepository {
   }
 
   Future<void> deleteApto(int codApto) async {
-    await client.delete(Uri.parse(uriApto + codApto.toString()));
+    final token = await TokenStorage.getToken();
+    await client.delete(
+      Uri.parse(uriApto + codApto.toString()),
+      headers: {'Authorization': 'Bearer $token'},
+    );
   }
 
   Future<Apto> updateApto(Apto aptoAtualizado) async{

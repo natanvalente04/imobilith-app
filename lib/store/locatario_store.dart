@@ -29,4 +29,9 @@ class LocatarioStore extends ValueNotifier<LocatarioState> {
     await repository.updateLocatario( locatarioAtualizado);
     getLocatarios();
   }
+
+  Future<Locatario?> GetLocatarioById(int codLocatario) async {
+    Locatario? locatario = await repository.getLocatarioById(codLocatario);
+    return locatario;
+  }
 }

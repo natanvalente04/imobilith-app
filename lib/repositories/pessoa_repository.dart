@@ -19,6 +19,17 @@ class PessoaRepository {
     return repositoryHelper.parseListT<Pessoa>(jsonRaw, Pessoa.fromJson);
   }
 
+  Future<Pessoa> getPessoaById(int codPessoa) async {
+    final token = await TokenStorage.getToken();
+    final response = await client.get(Uri.parse(uriPessoa + codPessoa.toString()),
+      headers: {
+            'Authorization': 'Bearer $token'
+      },
+    );
+    final jsonRaw = response.body;
+    return repositoryHelper.parseT<Pessoa>(jsonRaw, Pessoa.fromJson);
+  }
+
   Future addPessoa(Pessoa pessoa) async {
     String json = repositoryHelper.parseToJson(pessoa);
     final token = await TokenStorage.getToken();

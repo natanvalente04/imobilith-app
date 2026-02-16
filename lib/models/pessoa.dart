@@ -28,6 +28,7 @@ extension EstadoCivilExt on EstadoCivil {
 
 class Pessoa extends Equatable implements JsonSerializable {
   final int codPessoa;
+  final int? codLocatario;
   final String nomePessoa;
   final String cpf;
   final String rg;
@@ -39,6 +40,7 @@ class Pessoa extends Equatable implements JsonSerializable {
 
   Pessoa({
     required this.codPessoa,
+    this.codLocatario,
     required this.nomePessoa,
     required this.cpf,
     required this.rg,
@@ -52,6 +54,7 @@ class Pessoa extends Equatable implements JsonSerializable {
   factory Pessoa.init(){
     return Pessoa(
       codPessoa: 0,
+      codLocatario: null,
       nomePessoa: "",
       cpf: "",
       rg: "",
@@ -66,6 +69,7 @@ class Pessoa extends Equatable implements JsonSerializable {
   @override
   List<Object?> get props => [
     codPessoa,
+    codLocatario,
     nomePessoa,
     cpf,
     rg,
@@ -79,6 +83,7 @@ class Pessoa extends Equatable implements JsonSerializable {
   Map<String, dynamic> toJson() {
     return {
       'codPessoa': codPessoa,
+      'codLocataraio': codLocatario,
       'nomePessoa': nomePessoa,
       'cpf': cpf,
       'rg': rg,
@@ -93,6 +98,7 @@ class Pessoa extends Equatable implements JsonSerializable {
   factory Pessoa.fromJson(Map<String, dynamic> json){
     return Pessoa(
     codPessoa: json['codPessoa'],
+    codLocatario: json['codLocatario'],
     nomePessoa: json['nomePessoa'],
     cpf: json['cpf'],
     rg: json['rg'],

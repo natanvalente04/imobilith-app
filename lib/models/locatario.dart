@@ -30,7 +30,6 @@ class Locatario extends Equatable implements JsonSerializable{
       'codPessoa': this.codPessoa,
       'temPet': this.temPet,
       'qtdDependentes': this.qtdDependentes,
-
     };
   }
 

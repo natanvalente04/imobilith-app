@@ -1,7 +1,9 @@
 import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfiel_date.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_cpf.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfield_phone.dart';
 import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/helper.dart';
 import 'package:alugueis_app/models/pessoa.dart';
@@ -93,7 +95,7 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
               Row(
                 children: [
                   Expanded(
-                    child: DialogTextfield(controller: telefoneController, labelText: "Telefone/Celular"),
+                    child: DialogTextfieldPhone(controller: telefoneController, labelText: "Telefone/Celular", obrigatorio: true,),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -122,24 +124,10 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: DialogTextfielDate(
                       controller: dataNascimentoController,
-                      readOnly: true,
-                      decoration: const InputDecoration(
-                        labelText: "Data Nascimento*",
-                      ),
-                      onTap: () async {
-                        final DateTime? selecionado = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(DateTime.now().year - 150),
-                          lastDate: DateTime(DateTime.now().year + 1),
-                        );
-                        if (selecionado != null) {
-                          setState(() {
-                            dataNascimentoController.text = Helper.formatDate(selecionado);
-                          });
-                        }
-                      },
+                      labelText: "Data Nascimento",
+                      obrigatorio: true,
                     ),
                   ),
                   const SizedBox(width: 16),

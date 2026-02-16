@@ -74,7 +74,7 @@ class _CadLocatarioDialogState extends State<CadLocatarioDialog> {
           child: const Text("Cancelar"),
         ),
         ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             if (!_formKey.currentState!.validate()) {
             return;
           }
@@ -84,9 +84,7 @@ class _CadLocatarioDialogState extends State<CadLocatarioDialog> {
               qtdDependentes: int.tryParse(dependentesController.text) ?? 0,
               temPet: temPet ?? 0,
             );
-            existe ? 
-            widget.store.updateLocatario(novoLocatario)
-            : widget.store.addLocatario(novoLocatario);
+            await widget.store.addLocatario(novoLocatario);
             Navigator.pop(context);
           },
           child: const Text("Salvar"),

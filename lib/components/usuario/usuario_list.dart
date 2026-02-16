@@ -2,6 +2,7 @@ import 'package:alugueis_app/components/datagrid/datagrid_delete_button.dart';
 import 'package:alugueis_app/components/datagrid/datagrid_edit_button.dart';
 import 'package:alugueis_app/components/usuario/cad_usuario_dialog.dart';
 import 'package:alugueis_app/models/usuario.dart';
+import 'package:alugueis_app/store/locatario_store.dart';
 import 'package:alugueis_app/store/pessoa_store.dart';
 import 'package:alugueis_app/store/usuario_store.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,8 @@ import 'package:flutter/material.dart';
 class UsuarioList extends StatefulWidget {
   final UsuarioStore store;
   final PessoaStore pessoaStore;
-  const UsuarioList({super.key, required this.store, required this.pessoaStore});
+  final LocatarioStore locatarioStore;
+  const UsuarioList({super.key, required this.store, required this.pessoaStore, required this.locatarioStore});
 
   @override
   State<UsuarioList> createState() => _UsuarioListState();
@@ -64,7 +66,7 @@ class _UsuarioListState extends State<UsuarioList> {
                                 onPressed: (){
                                   showDialog(
                                     context: context,
-                                    builder: (_) => CadUsuarioDialog(store: widget.store, pessoaStore: widget.pessoaStore, usuario: usuario,)
+                                    builder: (_) => CadUsuarioDialog(store: widget.store, pessoaStore: widget.pessoaStore, usuario: usuario, locatarioStore: widget.locatarioStore,)
                                   );
                                 },
                               ),
@@ -80,8 +82,8 @@ class _UsuarioListState extends State<UsuarioList> {
                       ),
                       DataCell(Text(usuario.codUsuario.toString())),
                       DataCell(Text(usuario.codPessoa.toString())),
-                      DataCell(Text(usuario.ativo == true ? 'Ativo' : 'Inativo')),
                       DataCell(Text(usuario.role.label)),
+                      DataCell(Text(usuario.ativo == true ? 'Ativo' : 'Inativo')),
                     ]
                   );
                 }).toList(),
