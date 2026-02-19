@@ -1,4 +1,5 @@
 import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
+import 'package:alugueis_app/components/dialog/dialog_dropdown_listenable.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_cpf.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
@@ -89,15 +90,16 @@ class _LoginRegistroDialogState extends State<LoginRegistroDialog> {
                               ),
                               const SizedBox(width: 16),
                               Expanded(
-                                child: DialogDropdown(
+                                child: DialogDropdownListenable(
                                   store: ValueNotifier(EstadoCivil.values),
                                   value: estadoCivilSelecionado?.index,
+                                  obrigatorio: true,
                                   onChanged: (value){
                                     setState(() {
                                       estadoCivilSelecionado = Helper.getValueEnum(EstadoCivil.values, value!);
                                     });
                                   },
-                                  label: "Estado Civil*",
+                                  label: "Estado Civil",
                                   itemsBuilder: (values){
                                     return values.map<DropdownMenuItem<int>>((ec) {
                                       return DropdownMenuItem(
@@ -135,15 +137,16 @@ class _LoginRegistroDialogState extends State<LoginRegistroDialog> {
                               ),
                               const SizedBox(width: 16),
                               Expanded(
-                                child: DialogDropdown(
+                                child: DialogDropdownListenable(
                                   store: ValueNotifier(Role.values),
                                   value: roleSelecionada?.index,
+                                  obrigatorio: true,
                                   onChanged: (value){
                                     setState(() {
                                       roleSelecionada = Helper.getValueEnum(Role.values, value!);
                                     });
                                   },
-                                  label: "Tipo Usuario*",
+                                  label: "Tipo Usuario",
                                   enabled: false,
                                   itemsBuilder: (values){
                                     return values.map<DropdownMenuItem<int>>((ec) {

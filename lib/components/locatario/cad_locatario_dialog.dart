@@ -1,3 +1,4 @@
+import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
 import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/models/locatario.dart';
@@ -49,11 +50,10 @@ class _CadLocatarioDialogState extends State<CadLocatarioDialog> {
                 obrigatorio: true
               ),
               const SizedBox(width: 16),
-              DropdownButtonFormField(
+              DialogDropdown(
                 value: temPet,
-                decoration: const InputDecoration(
-                  labelText: "Possui pet?*",
-                ),
+                label: "Possui pet?",
+                obrigatorio: true,
                 items: const [
                   DropdownMenuItem(value: 1, child: Text("Sim")),
                   DropdownMenuItem(value: 0, child: Text("Não"))

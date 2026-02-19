@@ -1,3 +1,4 @@
+import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
 import 'package:alugueis_app/components/dialog/dialog_title.dart';
@@ -60,12 +61,10 @@ class _CadTipoDespesaDialogState extends State<CadTipoDespesaDialog> {
               ),
               const SizedBox(height: 16),
               // Dropdown obrigatório
-              DropdownButtonFormField<int>(
+              DialogDropdown(
                 value: selecionado,
-                decoration: const InputDecoration(
-                  labelText: "Compartilhado?",
-                  border: OutlineInputBorder(),
-                ),
+                obrigatorio: true,
+                label:"Compartilhado?",
                 items: const [
                   DropdownMenuItem(value: 1, child: Text("Sim")),
                   DropdownMenuItem(value: 0, child: Text("Não")),
@@ -74,12 +73,6 @@ class _CadTipoDespesaDialogState extends State<CadTipoDespesaDialog> {
                   setState(() {
                     selecionado = value;
                   });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Selecione uma opção';
-                  }
-                  return null;
                 },
               ),
             ],

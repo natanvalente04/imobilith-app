@@ -1,4 +1,5 @@
 import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
+import 'package:alugueis_app/components/dialog/dialog_dropdown_listenable.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_senha.dart';
@@ -69,9 +70,9 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
         curve: Curves.easeInOut,
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight: 190,
-            maxHeight: roleSelecionada == Role.locatario ? 400 : 250,
-            minWidth: 500
+            minHeight: 230,
+            maxHeight: roleSelecionada == Role.locatario ? 450 : 280,
+            minWidth: 550
           ),
           child: Form(
             key: _formKey,
@@ -89,8 +90,9 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
                         ),
                         const SizedBox(width: 16,),
                         Expanded(
-                          child: DialogDropdown(
+                          child: DialogDropdownListenable(
                             store: widget.pessoaStore, 
+                            obrigatorio: true,
                             itemsBuilder: (State){
                               return State.pessoas.map((pessoa) {
                                 return DropdownMenuItem(
@@ -131,7 +133,7 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
                                 roleSelecionada = null;
                               });
                             }, 
-                            label: "Pessoa*"
+                            label: "Pessoa"
                           )
                         )
                       ],
@@ -154,9 +156,10 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
                           ),
                         ),
                         Expanded(
-                          child: DialogDropdown(
+                          child: DialogDropdownListenable(
                             store: ValueNotifier(Role.values),
                             value: roleSelecionada?.index,
+                            obrigatorio: true,
                             onChanged: (value) async {
                               Role novaRole = Helper.getValueEnum(Role.values, value!);
                               if (roleSelecionada == Role.locatario &&
@@ -180,7 +183,7 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
                                 return;
                               }
                             },
-                            label: "Tipo Usuario*",
+                            label: "Tipo Usuario",
                             itemsBuilder: (values){
                               return values.map<DropdownMenuItem<int>>((ec) {
                                 return DropdownMenuItem(
@@ -211,11 +214,10 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: DropdownButtonFormField(
+                            child: DialogDropdown(
                               value: temPet,
-                              decoration: const InputDecoration(
-                                labelText: "Possui pet?*",
-                              ),
+                              label: "Possui pet?",
+                              obrigatorio: true,
                               items: const [
                                 DropdownMenuItem(value: 1, child: Text("Sim")),
                                 DropdownMenuItem(value: 0, child: Text("Não"))

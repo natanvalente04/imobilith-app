@@ -1,4 +1,5 @@
 import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
+import 'package:alugueis_app/components/dialog/dialog_dropdown_listenable.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
 import 'package:alugueis_app/components/dialog/dialog_title.dart';
 import 'package:alugueis_app/models/apto.dart';
@@ -68,15 +69,16 @@ class _CadAptoDialogState extends State<CadAptoDialog> {
                   ),
                   const SizedBox(width: 16,),
                   Expanded(
-                    child: DialogDropdown(
+                    child: DialogDropdownListenable(
                       store: widget.predioStore,
                       value: predioSelecionado,
+                      obrigatorio: true,
                       onChanged: (value){
                         setState(() {
                           predioSelecionado = value;
                         });
                       },
-                      label: "Predio*",
+                      label: "Predio",
                       itemsBuilder:(State) {
                         return State.predios.map((p) {
                             return DropdownMenuItem(

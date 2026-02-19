@@ -1,7 +1,10 @@
 import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
+import 'package:alugueis_app/components/dialog/dialog_dropdown_listenable.dart';
 import 'package:alugueis_app/components/dialog/dialog_title.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfield_date.dart';
 import 'package:alugueis_app/helper.dart';
 import 'package:alugueis_app/models/despesa.dart';
+import 'package:alugueis_app/models/tipo_despesa.dart';
 import 'package:alugueis_app/store/apto_store.dart';
 import 'package:alugueis_app/store/despesa_store.dart';
 import 'package:alugueis_app/store/tipo_despesa_store.dart';
@@ -74,12 +77,12 @@ class _CadDespesaDialogState extends State<CadDespesaDialog> {
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: TextField(
+                      child: DialogTextfieldDate(
                         controller: dataDespesaController,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          labelText: "Data da Despesa*",
-                        ),
+                        enabled: false,
+                        labelText: "Data da Despesa",
+                        obrigatorio: true,
+                        inputFormatter: Helper.dateMask,
                       ),
                     ),
                   ],
@@ -88,29 +91,27 @@ class _CadDespesaDialogState extends State<CadDespesaDialog> {
                 Row(
                   children: [
                     Expanded(
-                      child: ValueListenableBuilder(
-                        valueListenable: widget.tipoDespesaStore,
-                        builder: (context, state, _) {
-                          return DropdownButtonFormField<int>(
-                            value: tipoDespesaSelecionado,
-                            items: state.tiposDespesa.map((tipo) {
-                              return DropdownMenuItem(
-                                value: tipo.codTipoDespesa,
-                                child: Text(tipo.nomeTipoDespesa),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                tipoDespesaSelecionado = value;
-                                codTipoDespesa = tipoDespesaSelecionado ?? 0;
-                                compartilhado = state.tiposDespesa
-                                        .firstWhere((t) => t.codTipoDespesa == value)
-                                        .compartilhado == 1;
-                              });
-                            },
-                            decoration: const InputDecoration(labelText: "Tipo de Despesa*"),
-                          );
-                        }
+                      child: DialogDropdownListenable(
+                        store: widget.tipoDespesaStore,
+                        value: tipoDespesaSelecionado,
+                        obrigatorio: true,
+                        itemsBuilder: (state) {
+                          return state.tiposDespesa.map((tipo) {
+                            return DropdownMenuItem(
+                              value: tipo.codTipoDespesa,
+                              child: Text(tipo.nomeTipoDespesa),
+                            );
+                          }).toList();
+                        },
+                        onChanged: (value) async {
+                          TipoDespesa? tipoDespesa = await GetTipoDespesaById(value!);
+                          setState(() {
+                            tipoDespesaSelecionado = value;
+                            codTipoDespesa = tipoDespesaSelecionado ?? 0;
+                            compartilhado = tipoDespesa!.compartilhado == 1;
+                          });
+                        },
+                        label: "Tipo de Despesa",
                       ),
                     ),
                   ],
@@ -120,9 +121,10 @@ class _CadDespesaDialogState extends State<CadDespesaDialog> {
                   Row(
                     children: [
                       Expanded(
-                        child: DialogDropdown(
+                        child: DialogDropdownListenable(
                           store: widget.aptoStore,
                           value: aptoSelecionado,
+                          obrigatorio: compartilhado ? false : true,
                           onChanged: (value) {
                             setState(() {
                               aptoSelecionado = value;
@@ -170,25 +172,11 @@ class _CadDespesaDialogState extends State<CadDespesaDialog> {
                     ),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: TextField(
+                      child: DialogTextfieldDate(
                         controller: competenciaMesController,
-                        readOnly: true,
-                        decoration: const InputDecoration(
-                          labelText: "Competência (mês)*",
-                        ),
-                        onTap: () async {
-                          final DateTime? selecionado = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime(DateTime.now().year, DateTime.now().month, 10),
-                            firstDate: DateTime(DateTime.now().year - 5),
-                            lastDate: DateTime(DateTime.now().year + 100),
-                          );
-                          if (selecionado != null) {
-                            setState(() {
-                              competenciaMesController.text = Helper.formatDateTime(selecionado, formato: 'MM/yyyy');
-                            });
-                          }
-                        },
+                        obrigatorio: true,
+                        labelText: "Competência (mês)",
+                        inputFormatter: Helper.dateMesAnoMask,
                       ),
                     ),
                   ],
@@ -226,5 +214,10 @@ class _CadDespesaDialogState extends State<CadDespesaDialog> {
         )
       ],
     );
+  }
+
+  Future<TipoDespesa?> GetTipoDespesaById(int codTipoDespesa) async {
+    TipoDespesa? tipoDespesa = await widget.tipoDespesaStore.getTipoDespesaById(codTipoDespesa);
+    return tipoDespesa;
   }
 }

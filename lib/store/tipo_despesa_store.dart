@@ -12,6 +12,11 @@ class TipoDespesaStore  extends ValueNotifier<TipoDespesaState>{
     value = value.copyWith(tiposDespesa: tiposDespesa);
   }
 
+  Future<TipoDespesa?> getTipoDespesaById(int codTipoDespesa)async{
+    final TipoDespesa? tipoDespesa = await repository.getTipoDespesaById(codTipoDespesa);
+    return tipoDespesa;
+  }
+
   Future<void> addTipoDespesa(TipoDespesa tipoDespesa) async {
     TipoDespesa tipoDespesaNovo = await repository.addTipoDespesa(tipoDespesa);
     value = value.copyWith(

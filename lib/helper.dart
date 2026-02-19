@@ -20,6 +20,23 @@ class Helper {
   static T getValueEnum<T>(List<T> values, int numero) =>
     values[numero];
 
+  static bool validaDataBR(String data, {String formato = 'dd/MM/yyyy'}) {
+    try {
+      DateFormat(formato, 'pt_BR').parseStrict(data);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static bool validaDataNascimento(String data){
+    final dataNascimento = DateFormat("dd/MM/yyyy", 'pt_BR').parseStrict(data);
+    if (dataNascimento.isAfter(DateTime.now())){
+      return false;
+    }
+    return true;
+  }
+
   static int calcularIdade(DateTime nascimento) {
     final hoje = DateTime.now();
 
@@ -41,6 +58,15 @@ class Helper {
   static MaskTextInputFormatter phoneMask = MaskTextInputFormatter(
     mask: '(##) # ####-####',
     filter: { "#": RegExp(r'[0-9]') },
+  );
+  static MaskTextInputFormatter dateMask = MaskTextInputFormatter(
+    mask: 'dd/MM/yyyy',
+    filter: { "dMy": RegExp(r'[0-9]') },
+  );
+
+    static MaskTextInputFormatter dateMesAnoMask = MaskTextInputFormatter(
+    mask: 'MM/yyyy',
+    filter: { "My": RegExp(r'[0-9]') },
   );
 
   static void showSuccessToast(BuildContext context, String message) {

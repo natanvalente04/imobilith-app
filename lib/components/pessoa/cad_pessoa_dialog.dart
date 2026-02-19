@@ -1,5 +1,6 @@
 import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
-import 'package:alugueis_app/components/dialog/dialog_textfiel_date.dart';
+import 'package:alugueis_app/components/dialog/dialog_dropdown_listenable.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfield_date.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_cpf.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
@@ -99,15 +100,16 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: DialogDropdown(
+                    child: DialogDropdownListenable(
                       store: ValueNotifier(EstadoCivil.values),
                       value: estadoCivilSelecionado?.index,
+                      obrigatorio: true,
                       onChanged: (value){
                         setState(() {
                           estadoCivilSelecionado = Helper.getValueEnum(EstadoCivil.values, value!);
                         });
                       },
-                      label: "Estado Civil*",
+                      label: "Estado Civil",
                       itemsBuilder: (values){
                         return values.map<DropdownMenuItem<int>>((ec) {
                           return DropdownMenuItem(
@@ -124,10 +126,12 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
               Row(
                 children: [
                   Expanded(
-                    child: DialogTextfielDate(
+                    child: DialogTextfieldDate(
                       controller: dataNascimentoController,
                       labelText: "Data Nascimento",
                       obrigatorio: true,
+                      isBirthDate: true,
+                      inputFormatter: Helper.dateMask,
                     ),
                   ),
                   const SizedBox(width: 16),

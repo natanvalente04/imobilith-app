@@ -10,9 +10,23 @@ class DespesaRepository {
   final token = TokenStorage.getToken();
 
   Future<List<Despesa>> getDespesas() async {
-    final response = await client.get(Uri.parse(uriDespesa));
+    final token = await TokenStorage.getToken();
+    final response = await client.get(
+      Uri.parse(uriDespesa ),
+      headers: {'Authorization': 'Bearer $token'},
+    );
     final jsonRaw = response.body;
     return repositoryHelper.parseListT<Despesa>(jsonRaw, Despesa.fromJson);
+  }
+
+  Future<Despesa> getDespesaById(int codDespesa) async {
+    final token = await TokenStorage.getToken();
+    final response = await client.get(
+      Uri.parse(uriDespesa ),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    final jsonRaw = response.body;
+    return repositoryHelper.parseT<Despesa>(jsonRaw, Despesa.fromJson);
   }
 
   Future<Despesa> addDespesa(Despesa despesa) async {
