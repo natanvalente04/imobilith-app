@@ -96,7 +96,7 @@ class _PessoaListState extends State<PessoaList> {
                             ),
                             DatagridDeleteButton(
                               onPressed: () {
-                                
+                                widget.store.deletePessoa(p.codPessoa);
                               },
                             ),
                           ],

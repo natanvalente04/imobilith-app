@@ -6,6 +6,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 class DialogTextfieldDate extends DialogTextfield {
   final MaskTextInputFormatter inputFormatter;
   final bool isBirthDate;
+  final String formato;
   DialogTextfieldDate({
     required super.controller, 
     required super.labelText,
@@ -13,6 +14,7 @@ class DialogTextfieldDate extends DialogTextfield {
     super.obrigatorio,
     this.isBirthDate = false,
     required this.inputFormatter,
+    this.formato = "dd/MM/yyyy"
   });
   
   @override
@@ -37,7 +39,7 @@ class _DialogTextFieldDateState extends State<DialogTextfieldDate> {
               lastDate: DateTime(DateTime.now().year + 150),
             );
             if (selecionado != null) {
-                widget.controller.text = Helper.formatDate(selecionado, formato: widget.inputFormatter.getMask()!);
+                widget.controller.text = Helper.formatDate(selecionado, formato: widget.formato);
             }
           } 
         ),
@@ -46,7 +48,7 @@ class _DialogTextFieldDateState extends State<DialogTextfieldDate> {
         if (widget.obrigatorio && (value == null || value.trim().isEmpty)) {
           return 'Campo Obrigatório!';
         }
-        if(!Helper.validaDataBR(value!, formato: widget.inputFormatter.getMask()!)){
+        if(!Helper.validaDataBR(value!, formato: widget.formato)){
           return 'Data Inválida!';
         }
         if(widget.isBirthDate && !Helper.validaDataNascimento(value)){

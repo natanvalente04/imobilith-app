@@ -28,4 +28,8 @@ class PessoaStore extends ValueNotifier<PessoaState> {
     Pessoa? pessoa = await repository.getPessoaById(codPessoa);
     return pessoa;
   }
+  Future<void> deletePessoa(int codPessoa) async {
+    await repository.deletePessoa(codPessoa);
+    getPessoas();
+  }
 }

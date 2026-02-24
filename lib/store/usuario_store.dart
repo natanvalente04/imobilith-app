@@ -17,6 +17,11 @@ class UsuarioStore extends ValueNotifier<UsuarioState>{
     return existe;
   }
 
+  Future<bool> existeUsuarioByPessoaId(int codPessoa) async{
+    final existe = await repository.existeUsuarioByPessoaId(codPessoa);
+    return existe;
+  }
+
   Future<void> Login(UsuarioLogin login) async {
     Authentication auth = await loginRepository.Login(login); 
     await TokenStorage.saveToken(auth);

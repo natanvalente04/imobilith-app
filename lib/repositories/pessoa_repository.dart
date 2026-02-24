@@ -45,7 +45,7 @@ class PessoaRepository {
     return repositoryHelper.parseT<Pessoa>(jsonRaw, Pessoa.fromJson);
   }
 
-    Future updatePessoa(Pessoa pessoaAtualizada) async {
+  Future updatePessoa(Pessoa pessoaAtualizada) async {
     String json = repositoryHelper.parseToJson(pessoaAtualizada);
     final token = await TokenStorage.getToken();
     final response = await client.put(
@@ -56,7 +56,16 @@ class PessoaRepository {
       },
       body: json
     );
-    final jsonRaw = response.body;
-    return repositoryHelper.parseT<Pessoa>(jsonRaw, Pessoa.fromJson);
+  }
+
+  Future deletePessoa(int codPessoa) async {
+    final token = await TokenStorage.getToken();
+    await client.delete(
+      Uri.parse(uriPessoa + codPessoa.toString()),
+      headers:{
+        'Authorization': 'Bearer $token'
+      },
+    );
+
   }
 }

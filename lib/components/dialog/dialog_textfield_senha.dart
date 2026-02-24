@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 class DialogTextfieldSenha extends DialogTextfield {
   final bool? enabled;
   final bool obrigatorio;
+  final String? Function(String?)? validator;
   const DialogTextfieldSenha({super.key, 
     required super.controller, 
     required super.labelText, 
@@ -14,6 +15,7 @@ class DialogTextfieldSenha extends DialogTextfield {
     super.onSubmitted,
     this.obrigatorio = true,
     this.enabled = true, 
+    this.validator
   });
 
   @override
@@ -48,10 +50,11 @@ class _DialogTextfieldSenhaState extends State<DialogTextfieldSenha> {
       
       keyboardType: widget.keyboardType,
       obscureText: obscureText,
-      validator: (value) {
+      validator: widget.validator ?? (value) {
         if (widget.obrigatorio && (value == null || value.trim().isEmpty)) {
           return 'Campo Obrigatório!';
         }
+        return null;
       },
     );
   }

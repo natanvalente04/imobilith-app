@@ -1,6 +1,7 @@
 import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
 import 'package:alugueis_app/components/dialog/dialog_dropdown_listenable.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfield_confirma_senha.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_senha.dart';
 import 'package:alugueis_app/components/dialog/dialog_title.dart';
@@ -40,6 +41,7 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
   bool existe = false;
   bool existeLocatario = false;
   bool ativo = true;
+  bool existeUsuarioPessoa = false;
 
 
   @override
@@ -51,6 +53,7 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
     temPet = locatarioAtual?.temPet ?? null;
     dependentesController.text = locatarioAtual?.qtdDependentes.toString() ?? "";
     roleSelecionada = widget.usuario?.role;
+    ativo = widget.usuario?.ativo ?? true;
     if(pessoaSelecionada != null){
       _GetLocatarioByPessoaId(pessoaSelecionada!);
     }
@@ -103,10 +106,15 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
                             }, 
                             value: pessoaSelecionada, 
                             onChanged: (value) async {
+                              bool existeUsuarioPessoaTemp = false;
+                              if(!existe){
+                                existeUsuarioPessoaTemp = await widget.store.existeUsuarioByPessoaId(value!);
+                              }
                               if(value != null){
                                 Locatario? locatario = await GetLocatarioByPessoaIdAsync(value!);
                                 if(locatario != null){
                                   setState(() {
+                                    existeUsuarioPessoa = existeUsuarioPessoaTemp;
                                     pessoaSelecionada = value;
                                     roleSelecionada = Role.locatario;
                                     locatarioAtual = locatario;
@@ -120,20 +128,30 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
                                 }
                               }
                               setState(() {
-                                    locatarioAtual = null;
-                                    pessoaSelecionada = value;
-                                    mostrarCamposLocatario = false;
-                                    existeLocatario = mostrarCamposLocatario; 
-                                    codLocatarioController.text = locatarioAtual?.codLocatario.toString() ?? "";
-                                    temPet = locatarioAtual?.temPet ?? null;
-                                    dependentesController.text = locatarioAtual?.qtdDependentes.toString() ?? "";
+                                existeUsuarioPessoa = existeUsuarioPessoaTemp;
+                                locatarioAtual = null;
+                                pessoaSelecionada = value;
+                                mostrarCamposLocatario = false;
+                                existeLocatario = mostrarCamposLocatario; 
+                                codLocatarioController.text = locatarioAtual?.codLocatario.toString() ?? "";
+                                temPet = locatarioAtual?.temPet ?? null;
+                                dependentesController.text = locatarioAtual?.qtdDependentes.toString() ?? "";
                               });
                               await Future.delayed(const Duration(milliseconds: 200));
                               setState(() {
                                 roleSelecionada = null;
                               });
                             }, 
-                            label: "Pessoa"
+                            label: "Pessoa",
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Campo Obrigatório!';
+                              }
+                              if(existeUsuarioPessoa){
+                                return 'já existe um usuário cadastrado!';
+                              }
+                              return null;
+                            },
                           )
                         )
                       ],
@@ -239,11 +257,11 @@ class _CadUsuarioDialogState extends State<CadUsuarioDialog>  with TickerProvide
                     child: Row(
                       children: [
                         Expanded(
-                          child: DialogTextfieldSenha(controller: senhaController, labelText: "Senha",),
+                          child: DialogTextfieldSenha(controller: senhaController, labelText: "Senha",obrigatorio: !existe,),
                         ),
                         const SizedBox(width: 16,),
                         Expanded(
-                          child: DialogTextfieldSenha(controller: confirmaSenhaController, labelText: "Confirma senha"),
+                          child: DialogTextfieldConfirmaSenha(controller: confirmaSenhaController,controllerSenha: senhaController, labelText: "Confirma senha", obrigatorio: !existe,),
                         ),
                       ],
                     ),

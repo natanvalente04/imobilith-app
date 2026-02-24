@@ -2,6 +2,7 @@ import 'package:alugueis_app/components/dialog/dialog_dropdown.dart';
 import 'package:alugueis_app/components/dialog/dialog_dropdown_listenable.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_cpf.dart';
+import 'package:alugueis_app/components/dialog/dialog_textfield_date.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_numeric.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_phone.dart';
 import 'package:alugueis_app/components/dialog/dialog_textfield_senha.dart';
@@ -115,24 +116,11 @@ class _LoginRegistroDialogState extends State<LoginRegistroDialog> {
                           Row(
                             children: [
                               Expanded(
-                                child: TextField(
+                                child: DialogTextfieldDate(
                                   controller: dataNascimentoController,
-                                  readOnly: true,
-                                  decoration: const InputDecoration(
-                                    labelText: "Data Nascimento*",
-                                  ),
-                                  onTap: () async {
-                                    final DateTime? selecionado = await showDatePicker(
-                                      context: context,
-                                      firstDate: DateTime(DateTime.now().year - 150),
-                                      lastDate: DateTime(DateTime.now().year + 1),
-                                    );
-                                    if (selecionado != null) {
-                                      setState(() {
-                                        dataNascimentoController.text = Helper.formatDate(selecionado);
-                                      });
-                                    }
-                                  },
+                                  obrigatorio: true,
+                                  labelText: "Data Nascimento",
+                                  inputFormatter: Helper.dateMask,
                                 ),
                               ),
                               const SizedBox(width: 16),

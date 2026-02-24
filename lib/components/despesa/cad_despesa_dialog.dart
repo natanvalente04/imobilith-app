@@ -95,6 +95,7 @@ class _CadDespesaDialogState extends State<CadDespesaDialog> {
                         store: widget.tipoDespesaStore,
                         value: tipoDespesaSelecionado,
                         obrigatorio: true,
+                        enabled: !existe,
                         itemsBuilder: (state) {
                           return state.tiposDespesa.map((tipo) {
                             return DropdownMenuItem(
@@ -161,7 +162,6 @@ class _CadDespesaDialogState extends State<CadDespesaDialog> {
                         onChanged: (value) {
                           if (value.contains(',')) {
                             final newValue = value.replaceAll(',', '.');
-                            // Atualiza o texto e mantém o cursor no final
                             vlrTotalDespesaController.value = TextEditingValue(
                               text: newValue,
                               selection: TextSelection.collapsed(offset: newValue.length),
@@ -177,6 +177,8 @@ class _CadDespesaDialogState extends State<CadDespesaDialog> {
                         obrigatorio: true,
                         labelText: "Competência (mês)",
                         inputFormatter: Helper.dateMesAnoMask,
+                        formato: "MM/yyyy",
+                        enabled: true,
                       ),
                     ),
                   ],

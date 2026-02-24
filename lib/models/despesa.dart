@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:ffi';
 
 import 'package:alugueis_app/repositories/helper/json_serializable.dart';
 import 'package:equatable/equatable.dart';

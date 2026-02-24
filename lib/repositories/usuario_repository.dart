@@ -18,6 +18,18 @@ class UsuarioRepository {
     return true;
   }
 
+  Future<bool> existeUsuarioByPessoaId(int codPessoa) async {
+    final token = await TokenStorage.getToken();
+    final response = await client.get(
+      Uri.parse(uriUsuario + 'existe/' + codPessoa.toString()),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 200) {
+      return response.body.toLowerCase() == 'true';
+    }
+    return true;
+  }
+
   Future<Usuario> addUsuario(Usuario usuario) async {
     final json = repositoryHelper.parseToJson(usuario);
     final token = await TokenStorage.getToken();
@@ -40,7 +52,7 @@ class UsuarioRepository {
     );
   }
 
-  Future<Usuario> updateUsuario(Usuario usuarioAtualizado) async {
+  Future updateUsuario(Usuario usuarioAtualizado) async {
     final json = repositoryHelper.parseToJson(usuarioAtualizado);
     final token = await TokenStorage.getToken();
     final response = await client.put(
@@ -48,8 +60,6 @@ class UsuarioRepository {
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
       body: json
     );
-    final jsonRaw = response.body;
-    return repositoryHelper.parseT<Usuario>(jsonRaw, Usuario.fromJson);
   }
 
   Future<List<Usuario>> getUsuarios() async {

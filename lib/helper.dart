@@ -60,13 +60,13 @@ class Helper {
     filter: { "#": RegExp(r'[0-9]') },
   );
   static MaskTextInputFormatter dateMask = MaskTextInputFormatter(
-    mask: 'dd/MM/yyyy',
-    filter: { "dMy": RegExp(r'[0-9]') },
+    mask: '##/##/####',
+    filter: { "#": RegExp(r'[0-9]') },
   );
 
     static MaskTextInputFormatter dateMesAnoMask = MaskTextInputFormatter(
-    mask: 'MM/yyyy',
-    filter: { "My": RegExp(r'[0-9]') },
+    mask: '##/####',
+    filter: { "#": RegExp(r'[0-9]') },
   );
 
   static void showSuccessToast(BuildContext context, String message) {

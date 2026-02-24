@@ -55,6 +55,7 @@ class DespesaRepository {
 
   Future<Despesa> updateDespesa(Despesa despesaAtualizado) async {
     final json = repositoryHelper.parseToJson(despesaAtualizado);
+    final token = await TokenStorage.getToken();
     final response = await client.put(
       Uri.parse(uriDespesa),
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer $token'},
