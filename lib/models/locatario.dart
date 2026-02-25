@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_this
 
+import 'package:alugueis_app/models/pessoa.dart';
 import 'package:alugueis_app/repositories/helper/json_serializable.dart';
 import 'package:equatable/equatable.dart';
 
@@ -8,11 +9,13 @@ class Locatario extends Equatable implements JsonSerializable{
   final int codPessoa;
   final int temPet;
   final int qtdDependentes;
+  final Pessoa? pessoa;
   const Locatario({
     required this.codLocatario,
     required this.codPessoa,
     required this.temPet,
     required this.qtdDependentes,
+    this.pessoa,
   });
 
   factory Locatario.fromJson(Map<String, dynamic> json){
@@ -21,6 +24,7 @@ class Locatario extends Equatable implements JsonSerializable{
         codPessoa: json['codPessoa'], 
         temPet: json['temPet'], 
         qtdDependentes: json['qtdDependentes'], 
+        pessoa: Pessoa.fromJson(json['pessoa']),
       );
   }
 
@@ -48,5 +52,6 @@ class Locatario extends Equatable implements JsonSerializable{
     codPessoa, 
     temPet, 
     qtdDependentes,
+    pessoa,
     ];
 }

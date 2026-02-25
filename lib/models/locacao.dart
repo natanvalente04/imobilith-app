@@ -5,6 +5,7 @@ class Locacao extends Equatable implements JsonSerializable{
   final int codLocacao;
   final int codApto;
   final int codLocatario;
+  final String? nomeLocatario;
   final double vlrAluguel;
   final double vlrCausao;
   final DateTime dataInicio;
@@ -13,6 +14,7 @@ class Locacao extends Equatable implements JsonSerializable{
     required this.codLocacao,
     required this.codApto,
     required this.codLocatario,
+    this.nomeLocatario, 
     required this.vlrAluguel,
     required this.vlrCausao,
     required this.dataInicio,
@@ -23,7 +25,8 @@ class Locacao extends Equatable implements JsonSerializable{
   List<Object?> get props => [
     codLocacao,
     codApto, 
-    codLocatario, 
+    codLocatario,
+    nomeLocatario, 
     vlrAluguel,
     vlrCausao,
     dataInicio,
@@ -35,6 +38,7 @@ class Locacao extends Equatable implements JsonSerializable{
       codLocacao: 0,
       codApto: 0,
       codLocatario: 0,
+      nomeLocatario: '',
       vlrAluguel: 0.0,
       vlrCausao: 0.0,
       dataInicio: DateTime.now(),
@@ -47,6 +51,7 @@ class Locacao extends Equatable implements JsonSerializable{
       codLocacao: json['codLocacao'],
       codApto: json['codApto'],
       codLocatario: json['codLocatario'],
+      nomeLocatario: json['nomeLocatario'],
       vlrAluguel: (json['vlrAluguel'] as num).toDouble(),
       vlrCausao: (json['vlrCausao'] as num).toDouble(),
       dataInicio: DateTime.parse(json['dataInicio']),
@@ -58,8 +63,8 @@ class Locacao extends Equatable implements JsonSerializable{
   Map<String, dynamic> toJson() {
     return {
       'codLocacao': codLocacao,
-      'codApto': codApto, 
-      'codLocatario': codLocatario, 
+      'codApto': codApto,
+      'codLocatario': codLocatario,
       'vlrAluguel': vlrAluguel,
       'vlrCausao': vlrCausao,
       'dataInicio': dataInicio.toIso8601String(),

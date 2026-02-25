@@ -13,14 +13,9 @@ class CadLocatarioDialog extends StatefulWidget {
   final int? codPessoa;
   const CadLocatarioDialog({super.key, required this.store, this.locatario, this.codPessoa});
 
-
-
   @override
   State<CadLocatarioDialog> createState() => _CadLocatarioDialogState();
-
 }
-
-
 
 class _CadLocatarioDialogState extends State<CadLocatarioDialog> {
   final _formKey = GlobalKey<FormState>();

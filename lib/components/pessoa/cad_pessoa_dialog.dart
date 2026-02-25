@@ -36,7 +36,6 @@ class _CadPessoaDialogState extends State<CadPessoaDialog> {
     final rgController = TextEditingController();
 
     EstadoCivil? estadoCivilSelecionado;
-    int? selecionado;
     bool existe = false;
 
     @override
